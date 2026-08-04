@@ -36,5 +36,5 @@ Clone the BING repository and install the utilities on your Linux system.
 ### Step 1: Clone the Repository
 Open your terminal and clone the project from GitHub:
 ```bash
-git clone [https://github.com/gpinteractive1-sudo/bing-cing.git](https://github.com/gpinteractive1-sudo/bing-cing.git)
-cd bing
+git clone [https://github.com/gpinteractive1-sudo/BING.git](https://github.com/gpinteractive1-sudo/BING.git)
+cd BING
