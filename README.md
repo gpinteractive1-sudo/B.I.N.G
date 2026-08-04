@@ -1,5 +1,5 @@
 # bing-cing
-A modern alternative to GNU cat, because Bing Is Not GNU.
+A modern alternative to GNU cat, because Cing Is Not GNU.
 
 ---
 
