@@ -33,6 +33,9 @@
 #include <unistd.h>   
 #include <fcntl.h>    
 #include <getopt.h>   
+#include <errno.h>
+#include <string.h>
+#include <stdbool.h>
 
 #define PROGRAM_NAME "cing"
 #define VERSION "1.0.0"
@@ -50,26 +53,46 @@ void print_version() {
     printf("\n");
 }
 
-void copy_stream(int src_fd, int dest_fd) {
+static ssize_t safe_read(int fd, void *buf, size_t count) {
+    ssize_t r;
+    do {
+        r = read(fd, buf, count);
+    } while (r < 0 && errno == EINTR);
+    return r;
+}
+
+static ssize_t safe_write_all(int fd, const void *buf, size_t count) {
+    const char *cbuf = buf;
+    size_t offset = 0;
+    while (offset < count) {
+        ssize_t w;
+        do {
+            w = write(fd, cbuf + offset, count - offset);
+        } while (w < 0 && errno == EINTR);
+        if (w < 0) return -1;
+        offset += (size_t)w;
+    }
+    return (ssize_t)offset;
+}
+
+int copy_stream(int src_fd, int dest_fd) {
     char buffer[BUFFER_SIZE];
     ssize_t nread;
 
-    while ((nread = read(src_fd, buffer, sizeof(buffer))) > 0) {
-        ssize_t nwritten = 0;
-        while (nwritten < nread) {
-            ssize_t w = write(dest_fd, buffer + nwritten, nread - nwritten);
-            if (w < 0) {
-                perror(PROGRAM_NAME);
-                exit(1);
-            }
-            nwritten += w;
+    while ((nread = safe_read(src_fd, buffer, sizeof(buffer))) > 0) {
+        ssize_t nwritten = safe_write_all(dest_fd, buffer, (size_t)nread);
+        if (nwritten < 0) {
+            perror(PROGRAM_NAME);
+            return -1;
         }
     }
 
     if (nread < 0) {
         perror(PROGRAM_NAME);
-        exit(1);
+        return -1;
     }
+
+    return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -94,19 +117,27 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    bool had_error = false;
+
     if (optind >= argc) {
-        copy_stream(STDIN_FILENO, STDOUT_FILENO);
+        if (copy_stream(STDIN_FILENO, STDOUT_FILENO) < 0) had_error = true;
     } else {
         for (int i = optind; i < argc; i++) {
+            if (strcmp(argv[i], "-") == 0) {
+                if (copy_stream(STDIN_FILENO, STDOUT_FILENO) < 0) had_error = true;
+                continue;
+            }
+
             int input_fd = open(argv[i], O_RDONLY);
             if (input_fd < 0) {
                 perror(PROGRAM_NAME);
+                had_error = true;
                 continue;
             }
-            copy_stream(input_fd, STDOUT_FILENO);
+            if (copy_stream(input_fd, STDOUT_FILENO) < 0) had_error = true;
             close(input_fd);
         }
     }
 
-    return 0;
+    return had_error ? 1 : 0;
 }
