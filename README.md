@@ -16,7 +16,7 @@ Licensed under the permissive **BSD 3-Clause License**, Cing gives developers an
 * **Zero Bloat:** Stripped of unnecessary legacy layers, focusing purely on high-performance stream copying.
 * **BSD 3-Clause License:** Fully open-source and free to use in any environment.
 * **Standard-Compliant:** Supports reading from standard input (`stdin`) or multiple files sequentially.
-* **Built-in Diagnostics:** Clean argument parsing with built-in `--help`, `--version`, and `--license` flags.
+* **Built-in Diagnostics:** Clean argument parsing with built-in `--help`, `--version` flags.
 
 ---
 
