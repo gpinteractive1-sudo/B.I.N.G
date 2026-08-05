@@ -2,7 +2,7 @@
 set -e
 
 echo "Building cing..."
-gcc -O3 -Wall -Wextra src/main.c -o cing
+gcc -O3 -Wall -Wextra src/cing.c -o cing
 
 PREFIX=${PREFIX:-/usr/local}
 DESTDIR=${DESTDIR:-}
