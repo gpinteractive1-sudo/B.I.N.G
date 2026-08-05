@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     int p_flag = 0;
 
   
-    while ((opt = getopt_long(argc, argv, "pvh", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "+pvh", long_options, NULL)) != -1) {
         switch (opt) {
             case 'p':
                 p_flag = 1;
