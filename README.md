@@ -17,6 +17,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cing`** — A clean-room alternative to `cat` for high-performance stream copying and file reading.
 * **`ctrue`** — A minimalist implementation of `true`.
 * **`cfalse`** — A minimalist implementation of `false`.
+* **`cecho`** — a clean-room implementation of `echo`
 
 ---
 
