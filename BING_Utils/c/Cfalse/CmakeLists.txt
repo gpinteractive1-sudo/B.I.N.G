@@ -1,2 +1,0 @@
-add_executable(cfalse src/cfalse.c)
-install(TARGETS cfalse DESTINATION bin)
