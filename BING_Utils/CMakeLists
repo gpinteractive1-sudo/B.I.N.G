@@ -1,0 +1,5 @@
+add_subdirectory(Cecho)
+add_subdirectory(Cfalse)
+add_subdirectory(Cing)
+add_subdirectory(Ctrue)
+add_subdirectory(Cpwd)
