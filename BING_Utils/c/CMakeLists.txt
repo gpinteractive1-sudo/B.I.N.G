@@ -38,9 +38,11 @@ else()
 endif()
 install(TARGETS cpwd DESTINATION bin)
 
+
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Cwhoami/src/cwhoami.c")
     add_executable(cwhoami Cwhoami/src/cwhoami.c)
 else()
-    add_executable(cwhoami Cwhoami/src/cpwd.c)
+    add_executable(cwhoami cwhoami/src/cwhoami.c)
 endif()
 install(TARGETS cwhoami DESTINATION bin)
+
