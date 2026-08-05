@@ -4,14 +4,7 @@ Thank you for your interest in contributing to **BING**! We are building a moder
 
 ## 🚀 How Can I Help?
 
-### 1. Implement New Utilities
-We are looking for clean-room implementations of standard POSIX utilities. Some of the high-priority tools needed next:
-* **`cpwd`** — Print working directory.
-* **`cmkdir` / `crmdir`** — Create and remove directories.
-* **`ctouch`** — Change file timestamps / create empty files.
-* **`cuname`** — Print system information.
-
-### 2. Code Quality & Requirements
+### 1. Code Quality & Requirements
 To ensure the project stays true to its philosophy, every contribution must follow these rules:
 * **Supported Languages:** You can implement utilities using **Pure C** (standard C/POSIX system calls), **Rust** (without heavy dependencies), or **Zig**.
 * **Zero Bloat:** Keep code minimal, high-performance, and secure. Avoid unnecessary third-party dependencies or heavy non-POSIX frameworks.
