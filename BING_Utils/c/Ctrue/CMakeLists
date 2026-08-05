@@ -1,2 +1,2 @@
 add_executable(cecho src/ctrue.c)
-install(TARGETS cecho DESTINATION bin)
+install(TARGETS ctrue DESTINATION bin)
