@@ -1,2 +1,2 @@
-add_executable(cecho src/cing.c)
-install(TARGETS cecho DESTINATION bin)
+add_executable(cing src/cing.c)
+install(TARGETS cing DESTINATION bin)
