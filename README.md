@@ -19,6 +19,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cfalse`** — A minimalist implementation of `false`.
 * **`cecho`** — a clean-room implementation of `echo`.
 * **`cpwd`** — A minimalist implementation of `pwd`.
+* **`cwhoami`** — A minimalist implementation of `whoami`.
 
 ---
 
