@@ -2,7 +2,7 @@
 set -e
 
 echo "Building cfalse..."
-gcc -O3 -Wall -Wextra src/main.c -o ctrue
+gcc -O3 -Wall -Wextra src/ctrue.c -o ctrue
 
 
 INSTALL_DIR="/usr/local/bin"
