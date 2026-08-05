@@ -1,2 +1,2 @@
-add_executable(cecho src/cpwd.c)
-install(TARGETS cecho DESTINATION bin)
+add_executable(cpwd src/cpwd.c)
+install(TARGETS cpwd DESTINATION bin)
