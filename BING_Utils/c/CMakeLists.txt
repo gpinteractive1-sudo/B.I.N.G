@@ -1,4 +1,3 @@
-
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Cecho/src/cecho.c")
     add_executable(cecho Cecho/src/cecho.c)
 else()
@@ -46,3 +45,11 @@ else()
 endif()
 install(TARGETS cwhoami DESTINATION bin)
 
+
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Ccommand/src/ccommand.c")
+    add_executable(ccommand Ccommand/src/ccommand.c)
+else()
+    add_executable(ccommand ccommand/src/ccommand.c)
+endif()
+install(TARGETS ccommand DESTINATION bin)
