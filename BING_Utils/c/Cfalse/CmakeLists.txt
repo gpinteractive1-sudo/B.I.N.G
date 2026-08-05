@@ -1,2 +1,2 @@
-add_executable(cecho src/cfalse.c)
-install(TARGETS cecho DESTINATION bin)
+add_executable(cfalse src/cfalse.c)
+install(TARGETS cfalse DESTINATION bin)
