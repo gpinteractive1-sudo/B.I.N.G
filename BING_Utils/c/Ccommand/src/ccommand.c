@@ -36,7 +36,8 @@
 
 #define PROGRAM_NAME "ccommand"
 #define VERSION "1.0.0"
-#define POSIX_DEF_PATH "/usr/bin:/bin:/usr/sbin:/sbin"
+#define POSIX_DEF_PATH "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
 
 void print_help() {
     printf("Usage: %s [-p] command_name [argument...]\n", PROGRAM_NAME);
