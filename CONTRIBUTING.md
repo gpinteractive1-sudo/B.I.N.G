@@ -6,7 +6,7 @@ Thank you for your interest in contributing to **BING**! We are building a moder
 
 ### 1. Code Quality & Requirements
 To ensure the project stays true to its philosophy, every contribution must follow these rules:
-* **Supported Languages:** You can implement utilities using **Pure C** (standard C/POSIX system calls), **Rust** (without heavy dependencies), or **Go (Golang)**.
+* **Supported Languages:** You can implement utilities using **Pure C** (standard C/POSIX system calls), **Rust** (without heavy dependencies), **FASM/NASM** or **Go (Golang)**.
 * **C++ Policy:** Using **C++** is generally discouraged. However, if you choose to use it, you must write in a strict **"C with Classes"** style. The standard template library (`std::`) is completely banned to avoid binary bloat. Avoid features like exceptions, RTTI, `<iostream>`, or heavy containers. Focus on clean, static memory boundaries.
 * **Go (Golang) Rule:** If you write utilities in Go, you must explicitly disable or strictly restrict the Garbage Collector (e.g., using `debug.SetGCPercent(-1)` inside the code or compiling with `GOGC=off`). Since our utilities are short-lived, we rely on the OS to clean up memory upon exit, eliminating runtime GC overhead.
 * **Zero Bloat:** Keep code minimal, high-performance, and secure. Avoid unnecessary third-party dependencies or heavy non-POSIX frameworks.
