@@ -44,6 +44,7 @@ set(BING_UTILS
     cpwd
     ccommand
     cid
+    cmkdir
 )
 foreach(tool ${BING_UTILS})
     add_c_tool(${tool})
