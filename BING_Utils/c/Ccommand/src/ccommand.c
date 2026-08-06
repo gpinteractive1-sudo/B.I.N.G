@@ -31,51 +31,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <string.h>
-#include <getopt.h> 
 
 #define PROGRAM_NAME "ccommand"
-#define VERSION "1.0.0"
 #define POSIX_DEF_PATH "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-
-void print_help() {
-    printf("Usage: %s [-p] command_name [argument...]\n", PROGRAM_NAME);
-    printf("Options:\n");
-    printf("  -h, --help     Show this help message and exit\n");
-    printf("  -v, --version  Show program version and exit\n");
-    printf("  -p             Use default POSIX PATH to find commands\n");
-}
-
-void print_version() {
-    printf("%s version %s\n", PROGRAM_NAME, VERSION);
-}
-
 int main(int argc, char *argv[]) {
-
-    struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"version", no_argument, 0, 'v'},
-        {0, 0, 0, 0}
-    };
-    
     int opt;
     int p_flag = 0;
 
-  
-    while ((opt = getopt_long(argc, argv, "+pvh", long_options, NULL)) != -1) {
+    while ((opt = getopt(argc, argv, "p")) != -1) {
         switch (opt) {
             case 'p':
                 p_flag = 1;
                 break;
-            case 'v':
-                print_version();
-                return 0;
-            case 'h':
-                print_help();
-                return 0;
             default:
-                fprintf(stderr, "Usage: %s [-p] command_name [argument...]\n", argv[0]);
+                fprintf(stderr, "Usage: %s [-p] command_name [argument...]\n", PROGRAM_NAME);
                 return 127;
         }
     }
