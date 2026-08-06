@@ -6,7 +6,7 @@ A modern, lightweight alternative to GNU Coreutils, built from scratch with clea
 
 ## 📖 Overview
 
-**BING** is a unified collection of minimalistic, high-performance command-line utilities written in pure C, Go, Rust, FASM/NASM and part of C++. Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. 
+**BING** is a unified collection of minimalistic, high-performance command-line utilities written in pure C, Go, Rust, FASM/NASM and part of C++. Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Fuck You GNU!
 
 Licensed under permissive terms (such as the BSD 3-Clause License or Public Domain where appropriate), BING gives developers and system administrators full freedom to modify, redistribute, and integrate these tools into any pipeline without friction.
 
