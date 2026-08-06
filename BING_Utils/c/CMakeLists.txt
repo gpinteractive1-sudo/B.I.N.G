@@ -1,56 +1,61 @@
 cmake_minimum_required(VERSION 3.10)
 project(BING_Core_Utils C)
 
+# C standard
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -O2")
 
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Cecho/src/cecho.c")
-    add_executable(cecho Cecho/src/cecho.c)
-else()
-    add_executable(cecho cecho/src/cecho.c)
-endif()
-install(TARGETS cecho DESTINATION bin)
-
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Cfalse/src/cfalse.c")
-    add_executable(cfalse Cfalse/src/cfalse.c)
-else()
-    add_executable(cfalse cfalse/src/cfalse.c)
-endif()
-install(TARGETS cfalse DESTINATION bin)
-
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Cing/src/cing.c")
-    add_executable(cing Cing/src/cing.c)
-else()
-    add_executable(cing cing/src/cing.c)
-endif()
-install(TARGETS cing DESTINATION bin)
-
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Ctrue/src/ctrue.c")
-    add_executable(ctrue Ctrue/src/ctrue.c)
-else()
-    add_executable(ctrue ctrue/src/ctrue.c)
-endif()
-install(TARGETS ctrue DESTINATION bin)
-
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Cpwd/src/cpwd.c")
-    add_executable(cpwd Cpwd/src/cpwd.c)
-else()
-    add_executable(cpwd cpwd/src/cpwd.c)
-endif()
-install(TARGETS cpwd DESTINATION bin)
-
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Ccommand/src/ccommand.c")
-    add_executable(ccommand Ccommand/src/ccommand.c)
-else()
-    add_executable(ccommand ccommand/src/ccommand.c)
-endif()
+add_compile_options(-Wall -Wextra -pedantic -O2)
 
 
+function(add_c_tool TOOLNAME)
 
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/Cid/src/cid.c")
-    add_executable(cid Cid/src/cid.c)
-else()
-    add_executable(cid cid/src/cid.c)
-endif()
-install(TARGETS cid DESTINATION bin)
+    string(LENGTH "${TOOLNAME}" TOOL_LEN)
+    if(TOOL_LEN EQUAL 0)
+        message(WARNING "add_c_tool called with empty TOOLNAME")
+        return()
+    endif()
+
+
+    string(SUBSTRING "${TOOLNAME}" 0 1 FIRST_CHAR)
+    math(EXPR REST_LEN "${TOOL_LEN} - 1")
+    if(REST_LEN GREATER 0)
+        string(SUBSTRING "${TOOLNAME}" 1 ${REST_LEN} REST)
+    else()
+        set(REST "")
+    endif()
+    string(TOUPPER "${FIRST_CHAR}" FIRST_UP)
+    set(DIR_CAP "${FIRST_UP}${REST}")
+
+    
+    set(SRC_LOWER "${CMAKE_CURRENT_SOURCE_DIR}/${TOOLNAME}/src/${TOOLNAME}.c")
+    set(SRC_CAP "${CMAKE_CURRENT_SOURCE_DIR}/${DIR_CAP}/src/${TOOLNAME}.c")
+
+    if(EXISTS "${SRC_CAP}")
+        add_executable(${TOOLNAME} "${SRC_CAP}")
+    elseif(EXISTS "${SRC_LOWER}")
+        add_executable(${TOOLNAME} "${SRC_LOWER}")
+    else()
+        message(WARNING "Source for '${TOOLNAME}' not found (checked: ${SRC_CAP} , ${SRC_LOWER}). Skipping ${TOOLNAME}.")
+        return()
+    endif()
+
+    #
+    install(TARGETS ${TOOLNAME} DESTINATION bin)
+endfunction()
+
+
+set(BING_UTILS
+    cecho
+    cfalse
+    cing
+    ctrue
+    cpwd
+    ccommand
+    cid
+)
+
+# Додаємо всі утиліти з переліку
+foreach(tool ${BING_UTILS})
+    add_c_tool(${tool})
+endforeach()
