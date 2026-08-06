@@ -45,24 +45,12 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Ccommand/src/ccommand.c")
 else()
     add_executable(ccommand ccommand/src/ccommand.c)
 endif()
-install(TARGETS ccommand DESTINATION bin)
 
-# Гнучка перевірка для cwhoami
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Cwhoami/src/cwhoami.c")
-    add_executable(cwhoami Cwhoami/src/cwhoami.c)
-elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cwhoami/src/cwhoami.c")
-    add_executable(cwhoami cwhoami/src/cwhoami.c)
-else()
-    add_executable(cwhoami cwhoami.c)
-endif()
-install(TARGETS cwhoami DESTINATION bin)
 
-# Гнучка перевірка для cid
+
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Cid/src/cid.c")
     add_executable(cid Cid/src/cid.c)
-elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cid/src/cid.c")
-    add_executable(cid cid/src/cid.c)
 else()
-    add_executable(cid cid.c)
+    add_executable(cid cid/src/cid.c)
 endif()
 install(TARGETS cid DESTINATION bin)
