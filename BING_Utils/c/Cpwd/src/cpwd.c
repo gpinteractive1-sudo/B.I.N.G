@@ -30,52 +30,45 @@
 
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
-#include <getopt.h>
 
 #define PROGRAM_NAME "cpwd"
-#define VERSION "1.0.0"
-
-void print_help() {
-    printf("Usage: %s\n", PROGRAM_NAME);
-    printf("Options:\n");
-    printf("  -h, --help          Show this help message and exit\n");
-    printf("  -v, --version       Show program version and exit\n");
-}
-
-void print_version() {
-    printf("%s version %s\n", PROGRAM_NAME, VERSION);
-    printf("\n");
-} 
 
 int main(int argc, char *argv[]) {
-        static struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"version", no_argument, 0, 'v'},
-        {0, 0, 0, 0}
-    };
     int opt;
-    while ((opt = getopt_long(argc, argv, "hv", long_options, NULL)) != -1) {
+    int mode = 'L'; 
+
+   
+    while ((opt = getopt(argc, argv, "LP")) != -1) {
         switch (opt) {
-            case 'h':
-                print_help();
-                return 0;
-            case 'v':
-                print_version();
-                return 0;
+            case 'L':
+            case 'P':
+                mode = opt;
+                break;
             default:
-                fprintf(stderr, "Try '%s --help' for help.\n", PROGRAM_NAME);
+                fprintf(stderr, "Usage: %s [-L | -P]\n", PROGRAM_NAME);
                 return 1;
         }
     }
 
-    char cwd [PATH_MAX];
+   
+    if (mode == 'L') {
+        char *pwd_env = getenv("PWD");
+        
+        if (pwd_env && pwd_env[0] == '/' && !strstr(pwd_env, "/./") && !strstr(pwd_env, "/../")) {
+            fputs(pwd_env, stdout);
+            putchar('\n');
+            return 0;
+        }
+    }
 
-    if(getcwd(cwd, sizeof(cwd)) != NULL) {
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
         fputs(cwd, stdout);
         putchar('\n');
-    
+        return 0;
     } else {
         perror(PROGRAM_NAME);
         return 1;
