@@ -21,7 +21,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cpwd`** — A minimalist implementation of `pwd`.
 * **`cid`** — A minimalist realization of `id`.
 * **`ccommand`** — A clean-room, standalone POSIX alternative to the shell built-in command utility of `posix-command`.
-* **`cmkkdir`** —  A realization of `mkdir`.
+* **`cmkdir`** —  A realization of `mkdir`.
 
 ---
 
