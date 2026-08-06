@@ -12,6 +12,7 @@ To ensure the project stays true to its philosophy, every contribution must foll
 * **BSD 3-Clause License:** All contributions will be licensed under the permissive BSD 3-Clause license. No GPL-encumbered code is allowed.
 * **Code Style & Safety:** Keep implementation headers clean. When using C/C++, avoid risky dynamic memory allocation (`malloc`/`new`) where static boundaries (like `4096` bytes for paths) are safer/faster, and use standard error handling (`perror`, `errno`, `stderr`). When using Rust or Go, leverage their built-in safety features and keep external dependencies to an absolute minimum to preserve small binary sizes.
 * **OTHER LANGUAGES ARE PROHIBITED.**
+* **DON'T USE GNU CODE OR BINARIES.**
 
 ### 🧪 2. Testing & Verification
 Before submitting a Pull Request, you must verify your utility:
