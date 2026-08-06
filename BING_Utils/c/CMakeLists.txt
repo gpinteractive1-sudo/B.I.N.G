@@ -1,16 +1,14 @@
-cmake_minimum_required(VERSION 3.10)
+\cmake_minimum_required(VERSION 3.10)
 project(BING_Core_Utils C)
-
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 add_compile_options(-Wall -Wextra -pedantic -O2)
-
+include(GNUInstallDirs)
 include(CheckFunctionExists)
 check_function_exists(getgrouplist HAVE_GETGROUPLIST)
 if(HAVE_GETGROUPLIST)
     add_compile_definitions(HAVE_GETGROUPLIST=1)
 endif()
-
 function(add_c_tool TOOLNAME)
     string(LENGTH "${TOOLNAME}" TOOL_LEN)
     if(TOOL_LEN EQUAL 0)
@@ -36,9 +34,8 @@ function(add_c_tool TOOLNAME)
         message(WARNING "Source for '${TOOLNAME}' not found (checked: ${SRC_CAP} , ${SRC_LOWER}). Skipping ${TOOLNAME}.")
         return()
     endif()
-    install(TARGETS ${TOOLNAME} DESTINATION bin)
+    install(TARGETS ${TOOLNAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endfunction()
-
 set(BING_UTILS
     cecho
     cfalse
@@ -48,7 +45,6 @@ set(BING_UTILS
     ccommand
     cid
 )
-
 foreach(tool ${BING_UTILS})
     add_c_tool(${tool})
 endforeach()
