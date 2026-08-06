@@ -30,55 +30,112 @@
 
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include <getopt.h>
+#include <grp.h>
 
-#define PROGRAM_NAME "cwhoami"
-#define VERSION "1.0.0"
-
-void print_help(void) {
-    printf("Usage: %s\n", PROGRAM_NAME);
-    printf("Print the user name associated with the current effective user ID.\n\n");
-    printf("Options:\n");
-    printf("  -h, --help          Show this help message and exit\n");
-    printf("  -v, --version       Show program version and exit\n");
-}
-
-void print_version(void) {
-    printf("%s version %s\n", PROGRAM_NAME, VERSION);
-}
+#define PROGRAM_NAME "cid"
 
 int main(int argc, char *argv[]) {
-    static struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"version", no_argument, 0, 'v'},
-        {0, 0, 0, 0}
-    };
-
     int opt;
-    while ((opt = getopt_long(argc, argv, "hv", long_options, NULL)) != -1) {
+    int u_flag = 0;
+    int g_flag = 0;
+    int n_flag = 0;
+
+    while ((opt = getopt(argc, argv, "ugn")) != -1) {
         switch (opt) {
-            case 'h':
-                print_help();
-                return 0;
-            case 'v':
-                print_version();
-                return 0;
+            case 'u': u_flag = 1; break;
+            case 'g': g_flag = 1; break;
+            case 'n': n_flag = 1; break;
             default:
-                fprintf(stderr, "Try '%s --help' for help.\n", PROGRAM_NAME);
+                fprintf(stderr, "Usage: %s [-u|-g] [-n]\n", PROGRAM_NAME);
                 return 1;
         }
     }
+
+    if (u_flag && g_flag) {
+        fprintf(stderr, "%s: cannot print both user and group IDs\n", PROGRAM_NAME);
+        return 1;
+    }
+
+    if (n_flag && !u_flag && !g_flag) {
+        fprintf(stderr, "%s: -n must be used with -u or -g\n", PROGRAM_NAME);
+        return 1;
+    }
+
     uid_t uid = geteuid();
-    struct passwd *pw = getpwuid(uid);
-    if(pw != NULL) {
-        fputs(pw->pw_name, stdout);
-        putchar('\n');
-        return 0;
-    } else {
+    gid_t gid = getegid();
+
+    if (u_flag && n_flag) {
+        struct passwd *pw = getpwuid(uid);
+        if (pw != NULL) {
+            fputs(pw->pw_name, stdout);
+            putchar('\n');
+            return 0;
+        }
         perror(PROGRAM_NAME);
         return 1;
     }
+
+    if (u_flag) {
+        printf("%u\n", (unsigned int)uid);
+        return 0;
+    }
+
+    if (g_flag && n_flag) {
+        struct group *gr = getgrgid(gid);
+        if (gr != NULL) {
+            fputs(gr->gr_name, stdout);
+            putchar('\n');
+            return 0;
+        }
+        perror(PROGRAM_NAME);
+        return 1;
+    }
+
+    if (g_flag) {
+        printf("%u\n", (unsigned int)gid);
+        return 0;
+    }
+
+    struct passwd *pw = getpwuid(uid);
+    struct group *gr = getgrgid(gid);
+
+    if (pw != NULL) {
+        printf("uid=%u(%s)", (unsigned int)uid, pw->pw_name);
+    } else {
+        printf("uid=%u", (unsigned int)uid);
+    }
+
+    if (gr != NULL) {
+        printf(" gid=%u(%s)", (unsigned int)gid, gr->gr_name);
+    } else {
+        printf(" gid=%u", (unsigned int)gid);
+    }
+
+    int ngroups = getgroups(0, NULL);
+    if (ngroups > 0) {
+        gid_t *groups = malloc(ngroups * sizeof(gid_t));
+        if (groups != NULL) {
+            if (getgroups(ngroups, groups) >= 0) {
+                printf(" groups=");
+                for (int i = 0; i < ngroups; i++) {
+                    struct group *g = getgrgid(groups[i]);
+                    if (g != NULL) {
+                        printf("%u(%s)", (unsigned int)groups[i], g->gr_name);
+                    } else {
+                        printf("%u", (unsigned int)groups[i]);
+                    }
+                    if (i < ngroups - 1) {
+                        putchar(',');
+                    }
+                }
+            }
+            free(groups);
+        }
+    }
+    putchar('\n');
+    return 0;
 }
