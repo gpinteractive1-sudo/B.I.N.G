@@ -28,30 +28,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>    
 #include <stdlib.h>   
 #include <unistd.h>   
 #include <fcntl.h>    
-#include <getopt.h>   
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
 
 #define PROGRAM_NAME "cing"
-#define VERSION "1.0.0"
 #define BUFFER_SIZE 4096
-
-void print_help() {
-    printf("Usage: %s <input_file>\n", PROGRAM_NAME);
-    printf("Options:\n");
-    printf("  -h, --help          Show this help message and exit\n");
-    printf("  -v, --version       Show program version and exit\n");
-}
-
-void print_version() {
-    printf("%s version %s\n", PROGRAM_NAME, VERSION);
-    printf("\n");
-}
 
 static ssize_t safe_read(int fd, void *buf, size_t count) {
     ssize_t r;
@@ -75,11 +62,12 @@ static ssize_t safe_write_all(int fd, const void *buf, size_t count) {
     return (ssize_t)offset;
 }
 
-int copy_stream(int src_fd, int dest_fd) {
+int copy_stream(int src_fd, int dest_fd, bool unbuffered) {
     char buffer[BUFFER_SIZE];
     ssize_t nread;
+    size_t read_size = unbuffered ? 1 : sizeof(buffer);
 
-    while ((nread = safe_read(src_fd, buffer, sizeof(buffer))) > 0) {
+    while ((nread = safe_read(src_fd, buffer, read_size)) > 0) {
         ssize_t nwritten = safe_write_all(dest_fd, buffer, (size_t)nread);
         if (nwritten < 0) {
             perror(PROGRAM_NAME);
@@ -96,23 +84,16 @@ int copy_stream(int src_fd, int dest_fd) {
 }
 
 int main(int argc, char *argv[]) {
-    static struct option long_options[] = {
-        {"help", no_argument, 0, 'h'},
-        {"version", no_argument, 0, 'v'},
-        {0, 0, 0, 0}
-    };
-
     int opt;
-    while ((opt = getopt_long(argc, argv, "hv", long_options, NULL)) != -1) {
+    bool u_flag = false;
+
+    while ((opt = getopt(argc, argv, "u")) != -1) {
         switch (opt) {
-            case 'h':
-                print_help();
-                return 0;
-            case 'v':
-                print_version();
-                return 0;
+            case 'u':
+                u_flag = true;
+                break;
             default:
-                fprintf(stderr, "Try '%s --help' for help.\n", PROGRAM_NAME);
+                fprintf(stderr, "Usage: %s [-u] [file...]\n", PROGRAM_NAME);
                 return 1;
         }
     }
@@ -120,24 +101,25 @@ int main(int argc, char *argv[]) {
     bool had_error = false;
 
     if (optind >= argc) {
-        if (copy_stream(STDIN_FILENO, STDOUT_FILENO) < 0) had_error = true;
+        if (copy_stream(STDIN_FILENO, STDOUT_FILENO, u_flag) < 0) had_error = true;
     } else {
         for (int i = optind; i < argc; i++) {
-            if (strcmp(argv[i], "-") == 0) {
-                if (copy_stream(STDIN_FILENO, STDOUT_FILENO) < 0) had_error = true;
+            if (argv[i][0] == '-' && argv[i][1] == '\0') {
+                if (copy_stream(STDIN_FILENO, STDOUT_FILENO, u_flag) < 0) had_error = true;
                 continue;
             }
 
             int input_fd = open(argv[i], O_RDONLY);
             if (input_fd < 0) {
-                perror(PROGRAM_NAME);
+                perror(argv[i]);
                 had_error = true;
                 continue;
             }
-            if (copy_stream(input_fd, STDOUT_FILENO) < 0) had_error = true;
+            if (copy_stream(input_fd, STDOUT_FILENO, u_flag) < 0) had_error = true;
             close(input_fd);
         }
     }
 
     return had_error ? 1 : 0;
 }
+
