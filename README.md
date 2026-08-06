@@ -20,7 +20,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cecho`** — a clean-room implementation of `echo`.
 * **`cpwd`** — A minimalist implementation of `pwd`.
 * **`cwhoami`** — A minimalist implementation of `whoami`.
-* ** `ccommand` — A clean-room, standalone POSIX alternative to the shell built-in command utility of `posix-command`.
+* **`ccommand`** — A clean-room, standalone POSIX alternative to the shell built-in command utility of `posix-command`.
 
 ---
 
