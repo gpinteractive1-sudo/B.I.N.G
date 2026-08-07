@@ -39,7 +39,15 @@
 
 #define PROGRAM_NAME "cmkdir"
 
-int make_parents(const char *orig_path, mode_t mode) {
+static int is_dir(const char *path) {
+    struct stat st;
+    if (stat(path, &st) == 0) {
+        return S_ISDIR(st.st_mode);
+    }
+    return 0;
+}
+
+static int make_parents(const char *orig_path, mode_t mode, int m_flag) {
     char path[PATH_MAX];
     size_t len = strlen(orig_path);
 
@@ -49,24 +57,31 @@ int make_parents(const char *orig_path, mode_t mode) {
     }
 
     memcpy(path, orig_path, len + 1);
-    char *p = path;
+    
+    while (len > 1 && path[len - 1] == '/') {
+        path[len - 1] = '\0';
+        len--;
+    }
 
+    char *p = path;
     if (*p == '/') {
         p++;
     }
 
     while (*p != '\0') {
         if (*p == '/') {
-            if (p == path || *(p - 1) == '/') {
+            if (*(p - 1) == '/') {
                 p++;
                 continue;
             }
 
             *p = '\0';
 
-            if (mkdir(path, mode) != 0 && errno != EEXIST) {
-                perror(path);
-                return -1;
+            if (mkdir(path, 0777) != 0) {
+                if (errno != EEXIST || !is_dir(path)) {
+                    perror(path);
+                    return -1;
+                }
             }
 
             *p = '/';
@@ -74,9 +89,18 @@ int make_parents(const char *orig_path, mode_t mode) {
         p++;
     }
 
-    if (mkdir(path, mode) != 0 && errno != EEXIST) {
-        perror(path);
-        return -1;
+    if (mkdir(path, mode) != 0) {
+        if (errno != EEXIST || !is_dir(path)) {
+            perror(path);
+            return -1;
+        }
+    }
+
+    if (m_flag) {
+        if (chmod(path, mode) != 0) {
+            perror(path);
+            return -1;
+        }
     }
 
     return 0;
@@ -85,6 +109,7 @@ int make_parents(const char *orig_path, mode_t mode) {
 int main(int argc, char *argv[]) {
     int opt;
     int p_flag = 0;
+    int m_flag = 0;
     mode_t mode = 0777;
 
     while ((opt = getopt(argc, argv, "pm:")) != -1) {
@@ -105,6 +130,7 @@ int main(int argc, char *argv[]) {
                     return 1;
                 }
                 mode = (mode_t)val;
+                m_flag = 1;
                 break;
             }
 
@@ -122,13 +148,18 @@ int main(int argc, char *argv[]) {
     int has_error = 0;
     for (int i = optind; i < argc; i++) {
         if (p_flag) {
-            if (make_parents(argv[i], mode) != 0) {
+            if (make_parents(argv[i], mode, m_flag) != 0) {
                 has_error = 1;
             }
         } else {
             if (mkdir(argv[i], mode) != 0) {
                 perror(argv[i]);
                 has_error = 1;
+            } else if (m_flag) {
+                if (chmod(argv[i], mode) != 0) {
+                    perror(argv[i]);
+                    has_error = 1;
+                }
             }
         }
     }
