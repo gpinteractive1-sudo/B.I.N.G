@@ -35,10 +35,20 @@
 #include <sys/types.h>
 #include <string.h>
 #include <errno.h>
+#include <limits.h>
 
 #define PROGRAM_NAME "cmkdir"
 
-int make_parents(char *path, mode_t mode) {
+int make_parents(const char *orig_path, mode_t mode) {
+    char path[PATH_MAX];
+    size_t len = strlen(orig_path);
+
+    if (len >= sizeof(path)) {
+        fprintf(stderr, "%s: '%s': File name too long\n", PROGRAM_NAME, orig_path);
+        return -1;
+    }
+
+    memcpy(path, orig_path, len + 1);
     char *p = path;
 
     if (*p == '/') {
@@ -47,27 +57,25 @@ int make_parents(char *path, mode_t mode) {
 
     while (*p != '\0') {
         if (*p == '/') {
-
             if (p == path || *(p - 1) == '/') {
-            p++;
-            continue;
-    }
-    
+                p++;
+                continue;
+            }
+
             *p = '\0';
 
             if (mkdir(path, mode) != 0 && errno != EEXIST) {
-                perror(PROGRAM_NAME);
+                perror(path);
                 return -1;
             }
 
-           
             *p = '/';
         }
         p++;
     }
 
     if (mkdir(path, mode) != 0 && errno != EEXIST) {
-        perror(PROGRAM_NAME);
+        perror(path);
         return -1;
     }
 
@@ -80,19 +88,32 @@ int main(int argc, char *argv[]) {
     mode_t mode = 0777;
 
     while ((opt = getopt(argc, argv, "pm:")) != -1) {
-        switch(opt){
-          case 'p': 
-            p_flag = 1;
-            break;
-          
-          case 'm':
-            mode = (mode_t)strtol(optarg, NULL, 8);
-            break;
-          default:
-          fprintf(stderr, "Usage: %s [-p] [-m mode] directory...\n", PROGRAM_NAME);
-          return 1;
+        switch (opt) {
+            case 'p': 
+                p_flag = 1;
+                break;
+
+            case 'm': {
+                char *endptr;
+                long val;
+                
+                errno = 0;
+                val = strtol(optarg, &endptr, 8);
+                
+                if (errno != 0 || *endptr != '\0' || endptr == optarg || val < 0 || val > 07777) {
+                    fprintf(stderr, "%s: invalid mode '%s'\n", PROGRAM_NAME, optarg);
+                    return 1;
+                }
+                mode = (mode_t)val;
+                break;
+            }
+
+            default:
+                fprintf(stderr, "Usage: %s [-p] [-m mode] directory...\n", PROGRAM_NAME);
+                return 1;
         }
     }
+
     if (optind >= argc) {
         fprintf(stderr, "%s: missing operand\n", PROGRAM_NAME);
         return 1;
@@ -113,5 +134,4 @@ int main(int argc, char *argv[]) {
     }
 
     return has_error ? 1 : 0;
-
 }
