@@ -1,4 +1,4 @@
-# BING (Bing Is Not GNU)
+# BING (Binary Is Not GNU)
 
 A modern, lightweight alternative to GNU Coreutils, built from scratch with clean, permissive licenses.
 
