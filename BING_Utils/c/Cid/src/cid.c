@@ -111,11 +111,16 @@ int main(int argc, char *argv[]) {
         ngroups = NGROUPS_MAX;
         if (getgrouplist(pw->pw_name, egid, groups, &ngroups) < 0) {
             ngroups = NGROUPS_MAX;
+            fprintf(stderr, "%s: %s: too many groups for static buffer\n", PROGRAM_NAME, pw->pw_name);
+            return 1;
         }
     } else {
         ngroups = getgroups(NGROUPS_MAX, groups);
-    }
-
+        if (ngroups < 0) {
+            perror(PROGRAM_NAME ": getgroups failed");
+            return 1;
+        }
+    } 
     if (G_flag) {
         for (int i = 0; i < ngroups; i++) {
             struct group *gr = getgrgid(groups[i]);
