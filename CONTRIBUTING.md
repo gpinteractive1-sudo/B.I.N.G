@@ -1,6 +1,6 @@
-# Contributing to BING (Bing Is Not GNU)
+# Contributing to B.I.N.G(Binary Is Not GNU)
 
-Thank you for your interest in contributing to **BING**! We are building a modern, lightweight, and GPL-free alternative to standard GNU coreutils. Since this project is in its early stages, there is plenty of room for new features, utilities, and optimization.
+Thank you for your interest in contributing to **B.I.N.G**! We are building a modern, lightweight, and GPL-free alternative to standard GNU coreutils. Since this project is in its early stages, there is plenty of room for new features, utilities, and optimization.
 
 ## 🚀 How Can I Help?
 
