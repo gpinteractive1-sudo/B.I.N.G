@@ -46,6 +46,7 @@ set(BING_UTILS
     cid
     cmkdir
     csleep
+    cenv
 )
 foreach(tool ${BING_UTILS})
     add_c_tool(${tool})
