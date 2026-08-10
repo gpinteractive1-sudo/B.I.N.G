@@ -1,4 +1,4 @@
-# BING (Binary Is Not GNU)
+# B.I.N.G (Binary Is Not GNU)
 
 A modern, lightweight alternative to GNU Coreutils, built from scratch with clean, permissive licenses.
 
@@ -6,7 +6,7 @@ A modern, lightweight alternative to GNU Coreutils, built from scratch with clea
 
 ## 📖 Overview
 
-**BING** is a unified collection of minimalistic, high-performance command-line utilities written in pure C, Go, Rust, FASM/NASM and part of C++. Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Fuck You GNU! Linux belongs to Linus and the community-not your bloated legacy.
+**B.I.N.G** is a unified collection of minimalistic, high-performance command-line utilities written in pure C, Go, Rust, FASM/NASM and part of C++. Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Fuck You GNU! Linux belongs to Linus and the community-not your bloated legacy.
 
 Licensed under permissive terms (such as the BSD 3-Clause License or Public Domain where appropriate), BING gives developers and system administrators full freedom to modify, redistribute, and integrate these tools into any pipeline without friction.
 
@@ -37,7 +37,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 
 ## 🛠️ Installation & Tutorial
 
-Clone the BING repository and install the utilities on your Linux system.
+Clone the B.I.N.G repository and install the utilities on your Linux system.
 
 ### Step 1: Clone the Repository
 Open your terminal and clone the project from GitHub:
