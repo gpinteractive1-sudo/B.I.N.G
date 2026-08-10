@@ -6,7 +6,7 @@ Thank you for your interest in contributing to **B.I.N.G**! We are building a mo
 
 ### 1. Code Quality & Requirements
 To ensure the project stays true to its philosophy, every contribution must follow these rules:
-* **Supported Languages:** You can implement utilities using **Pure C** (standard C/POSIX system calls), **Rust** (without heavy dependencies), **FASM/NASM** or **Go (Golang)**.
+* **Supported Languages:** You can implement utilities using **Pure C** (standard C/POSIX system calls), **FASM/NASM**.
 * **C++ Policy:** Using **C++** is generally discouraged. However, if you choose to use it, you must write in a strict **"C with Classes"** style. The standard template library (`std::`) is completely banned to avoid binary bloat. Avoid features like exceptions, RTTI, `<iostream>`, or heavy containers. Focus on clean, static memory boundaries.
 * **Zero Bloat:** Keep code minimal, high-performance, and secure. Avoid unnecessary third-party dependencies or heavy non-POSIX frameworks.
 * **BSD 3-Clause License:** All contributions will be licensed under the permissive BSD 3-Clause license. No GPL-encumbered code is allowed.
