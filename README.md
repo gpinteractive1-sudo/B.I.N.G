@@ -23,6 +23,8 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`ccommand`** — A clean-room, standalone POSIX alternative to the shell built-in command utility of `posix-command`.
 * **`cmkdir`** —  A realization of `mkdir`.
 * **`csleep`** — a minimalist implementation of `sleep`.
+* **`cenv`** — a minimalist implementation of `env`.
+
 
 ---
 
