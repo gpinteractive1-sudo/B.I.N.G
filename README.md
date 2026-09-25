@@ -27,6 +27,11 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cchmod`** — a minimalist implementation of `chmod`.
 
 
+### Development & Languages 
+
+* **`bforth`** — A high-performance source-to-source compiler (transpiler) that translates Forth code into optimized, native C code.
+
+
 ---
 
 ## ✨ Core Features
