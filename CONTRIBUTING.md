@@ -10,7 +10,7 @@ To ensure the project stays true to its philosophy, every contribution must foll
 * **C++ Policy:** Using **C++** is generally discouraged. However, if you choose to use it, you must write in a strict **"C with Classes"** style. The standard template library (`std::`) is completely banned to avoid binary bloat. Avoid features like exceptions, RTTI, `<iostream>`, or heavy containers. Focus on clean, static memory boundaries.
 * **Zero Bloat:** Keep code minimal, high-performance, and secure. Avoid unnecessary third-party dependencies or heavy non-POSIX frameworks.
 * **BSD 3-Clause License:** All contributions will be licensed under the permissive BSD 3-Clause license. No GPL-encumbered code is allowed.
-* **Code Style & Safety:** Keep implementation headers clean. When using C/C++, avoid risky dynamic memory allocation (`malloc`/`new`) where static boundaries (like `4096` bytes for paths) are safer/faster, and use standard error handling (`perror`, `errno`, `stderr`). When using Rust or Go, leverage their built-in safety features and keep external dependencies to an absolute minimum to preserve small binary sizes.
+* **Code Style & Safety:** Keep implementation headers clean. When using C/C++, avoid risky dynamic memory allocation (`malloc`/`new`) where static boundaries (like `4096` bytes for paths) are safer/faster, and use standard error handling (`perror`, `errno`, `stderr`). When using Rust, leverage their built-in safety features and keep external dependencies to an absolute minimum to preserve small binary sizes.
 * **OTHER LANGUAGES ARE PROHIBITED.**
 * **DON'T USE GNU CODE OR BINARIES WITH GPL.**
 
