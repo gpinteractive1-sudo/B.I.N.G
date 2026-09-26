@@ -45,7 +45,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 
 ## 🛠️ Installation & Tutorial
 
-Clone the B.I.N.G repository and install the utilities on your Linux system.
+Clone the B.I.N.G repository and install the toolchain with utilities on your Linux system.
 
 ### Step 1: Clone the Repository
 Open your terminal and clone the project from GitHub:
