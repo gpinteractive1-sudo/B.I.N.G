@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 #define PROGRAM_NAME "bforth"
 #define STACK_SIZE 1024
