@@ -52,3 +52,11 @@ Open your terminal and clone the project from GitHub:
 ```bash
 git clone https://github.com/gpinteractive1-sudo/BING.git
 cd BING
+
+### Step 2: Installing the Toolchain
+Perform the following tricks in the current folder:
+```bash
+mkdir build
+cmake ..
+sudo make install
+
