@@ -46,7 +46,9 @@ void write_header(FILE *out) {
     fprintf(out, "#include <stdlib.h>\n\n");
     fprintf(out, "long memory[%d] = {0};\n", MEMORY_SIZE);
     fprintf(out, "long stack[%d];\n", STACK_SIZE);
-    fprintf(out, "int top = -1;\n\n");
+    fprintf(out, "long rstack[%d] = {0};\n", STACK_SIZE);
+    fprintf(out, "int rtop = -1;\n\n");
+    fprintf(out, "int top = -1;\n");
     fprintf(out, "void fth_block_0(void) {\n");
 }
 
@@ -125,59 +127,111 @@ int main(int argc, char *argv[]) {
         else if (strncmp(token, "LABEL", 5) == 0 || strncmp(token, "label", 5) == 0) { 
              fprintf(out, "label_fth_%s:\n", token + 5);
         }
+        else if(strcmp(token, "BRANCH") == 0 || strcmp(token, "branch") == 0) {
+             char lbl_num[MAX_TOKEN_LEN];
+             if (fscanf(in, "%255s", lbl_num) != EOF) {
+                 fprintf(out, "    goto label_fth_%s;\n", lbl_num);
+             }  
+        }
+        else if (strcasecmp(token, "OVER") == 0) {
+             fprintf(out, "    if(top >= 1 && top < 1023) { stack[top+1] = stack[top-1]; top++; }\n");
+        }
+        else if (strcmp(token, "ROT") == 0) {
+             fprintf(out, "    if (top >= 2) { long t = stack[top-2]; stack[top-2] = stack[top-1]; stack[top-1] = stack[top]; stack[top] = t; }\n");
+        }
         else if (strcmp(token, "@") == 0 || strcasecmp(token, "FETCH") == 0) {
              fprintf(out, "    if (top >= 0 && stack[top] >= 0 && stack[top] < %d) { stack[top] = memory[stack[top]]; }\n", MEMORY_SIZE);
         }
         else if (strcmp(token, "!") == 0 || strcasecmp(token, "STORE") == 0) {
              fprintf(out, "    if (top >= 1 && stack[top] >= 0 && stack[top] < %d) { memory[stack[top]] = stack[top-1]; top -= 2; }\n", MEMORY_SIZE);
         }
-        else if(strcmp(token, "+") == 0) {
+        else if( strcmp(token, "+") == 0) {
              fprintf(out, "    if (top >= 1) { stack[top-1] += stack[top]; top--; }\n");
         }
         else if (strcmp(token, "-") == 0) {
-            fprintf(out, "    if (top >= 1) { stack[top-1] -= stack[top]; top--; }\n");
+             fprintf(out, "    if (top >= 1) { stack[top-1] -= stack[top]; top--; }\n");
+        }
+        else if (strcmp(token, "*") == 0) {
+             fprintf(out, "    if (top >= 1) { stack[top-1] *= stack[top]; top--; }\n");  
+        }
+        else if (strcmp(token, "/") == 0) {
+             fprintf(out, "    if (top >= 1 && stack [top] != 0) { stack[top-1] /= stack[top]; top--; }\n");  
+        }
+        else if (strcmp(token, "MOD") == 0) {
+             fprintf(out, "    if (top >= 1 && stack[top] != 0) { stack[top-1] %%= stack[top]; top--; }\n");  
+        }
+        else if (strcmp(token, "<") == 0) {
+             fprintf(out, "    if (top >= 1) { stack[top-1] = (stack[top-1] < stack[top]) ? -1 : 0; top--; }\n");  
+        }
+        else if (strcmp(token, ">") == 0) {
+             fprintf(out, "    if (top >= 1) { stack[top-1] = (stack[top-1] > stack[top]) ? -1 : 0; top--; }\n");
+        }
+        else if (strcmp(token, "0=") == 0) {
+             fprintf(out, "    if (top >= 0) { stack[top] = (stack[top] == 0) ? -1 : 0; }\n");  
+        }
+        else if (strcmp(token, "OR") == 0) {
+             fprintf(out, "    if (top >= 1) { stack[top-1] |= stack[top]; top--; }\n");
+        }
+        else if (strcmp(token, "XOR") == 0) {
+             fprintf(out, "    if (top >= 1) { stack[top-1] ^= stack[top]; top--; }\n");
+        }
+        else if (strcmp(token, "INVERT") == 0) {
+             fprintf(out, "    if (top >= 0) { stack[top] = ~stack[top]; }\n");
         }
         else if (strcmp(token, "=") == 0){
-            fprintf(out, "    if (top >= 1) { stack[top-1] = (stack[top-1] == stack[top]) ? -1 : 0; top--; }\n");
+             fprintf(out, "    if (top >= 1) { stack[top-1] = (stack[top-1] == stack[top]) ? -1 : 0; top--; }\n");
         }
         else if(strcmp(token, "DUP") == 0 || strcmp(token, "dup") == 0) {
-          fprintf(out, "    if (top >= 0 && top < %d) { stack[top+1] = stack[top]; top++; }\n", STACK_SIZE - 1);
+             fprintf(out, "    if (top >= 0 && top < %d) { stack[top+1] = stack[top]; top++; }\n", STACK_SIZE - 1);
+        }
+        else if(strcmp(token, ">R") == 0 || strcmp(token, ">r") == 0) {
+             fprintf(out, "    if (top >= 0 && rtop < 1023) { rstack[++rtop] = stack[top--]; }\n");
+        }
+        else if(strcmp(token, "R>") == 0 || strcmp(token, "r>") == 0) {
+             fprintf(out, "    if (rtop >= 0 && top < 1023) { stack[++top] = rstack[rtop--]; }\n");
+        }
+        else if(strcmp(token, "R@") == 0 || strcmp(token, "r@") == 0) {
+             fprintf(out, "    if (rtop >= 0 && top < 1023) { stack[++top] = rstack[rtop]; }\n");  
         }
         else if(strcmp(token, "DROP") == 0 || strcmp(token, "drop") == 0) {
-            fprintf(out, "    if (top >= 0) { top--; }\n");
+             fprintf(out, "    if (top >= 0) { top--; }\n");
         }
         else if(strcmp(token, "SWAP") == 0 || strcmp(token, "swap") == 0) {
-            fprintf(out, "    if (top >= 1) { long t = stack[top]; stack[top] = stack[top-1]; stack[top-1] = t; }\n");
+             fprintf(out, "    if (top >= 1) { long t = stack[top]; stack[top] = stack[top-1]; stack[top-1] = t; }\n");
         }
         else if (strcasecmp(token, "AND") == 0) {
-            fprintf(out, "    if (top >= 1) { stack[top-1] &= stack[top]; top--; }\n");
+             fprintf(out, "    if (top >= 1) { stack[top-1] &= stack[top]; top--; }\n");
         }
         else if(strcmp(token, ".") == 0){
-            fprintf(out, "    if (top >= 0) { printf(\"%%ld \", stack[top--]); fflush(stdout); }\n");
+             fprintf(out, "    if (top >= 0) { printf(\"%%ld \", stack[top--]); fflush(stdout); }\n");
         }
         else if(strcmp(token, "CR") == 0 || strcmp(token, "cr") == 0) {
-            fprintf(out, "    printf(\"\\n\");\n");
+             fprintf(out, "    printf(\"\\n\");\n");
         }
         else if(strcasecmp(token, "KEY") == 0) {
-            fprintf(out, "    if (top < %d) { stack[++top] = getchar(); }\n", STACK_SIZE - 1);
+             fprintf(out, "    if (top < %d) { stack[++top] = getchar(); }\n", STACK_SIZE - 1);
         }
         else if(strcasecmp(token, "EMIT") == 0) {
-            fprintf(out, "    if (top >= 0) { putchar((char)stack[top--]); fflush(stdout); }\n");
+             fprintf(out, "    if (top >= 0) { putchar((char)stack[top--]); fflush(stdout); }\n");
+        }
+        else if (strcasecmp(token, "EXECUTE") == 0) {
+             fprintf(out, "    if (top >= 0) { void (*func)(void) = (void (*)(void))stack[top--]; if(func) func(); }\n");
+        }
+        else if (strcasecmp(token, "NEGATE") == 0) {
+             fprintf(out, "    if (top >=0) { stack[top] = -stack[top]; }\n");  
+        }
+        else if (strcasecmp(token, "BYE") == 0) {
+             fprintf(out, "    exit(0);\n");  
         }
         else {
             char *endptr;
-            long val = strtol(token, &endptr, 0);
-            if(*endptr == '\0') {
-                fprintf(out, "    if (top < %d) { stack[++top] = %ld; }\n", STACK_SIZE - 1, val);
-            } else { 
-                fprintf(out, "    void fth_%s(void); fth_%s();\n", token, token);
-            }
-        }
-    }
-
-    write_footer(out);
-    fclose(in);
-    fclose(out);
-    printf("Transpilation finished successfully!\n");
-    return 0;
-}
+            long val = strtol(token, &endptr, 0);if(*endptr == '\0') 
+            {fprintf(out, "    if (top < %d) { stack[++top] = %ld; }\n", STACK_SIZE - 1, val);} 
+            else {fprintf(out, "    void fth_%s(void); fth_%s();\n", token, token);
+			  }
+			}
+		} 
+		write_footer(out);
+		fclose(in);
+		fclose(out);
+		printf("Transpilation finished successfully!\n");return 0;}
