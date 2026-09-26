@@ -234,4 +234,6 @@ int main(int argc, char *argv[]) {
 		write_footer(out);
 		fclose(in);
 		fclose(out);
-		printf("Transpilation finished successfully!\n");return 0;}
+		printf("Transpilation finished successfully!\n");
+	return 0;
+}
