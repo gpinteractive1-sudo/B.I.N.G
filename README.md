@@ -6,7 +6,7 @@ A modern, lightweight alternative to GNU Compiler infrastructure, low-developmen
 
 ## 📖 Overview
 
-**B.I.N.G** is a unified collection of minimalistic, high-performance command-line utilities, compiler collection infrastructure and low-development toolchain written in pure C, FASM and part of C With Classes(C++ Without STL). Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Fuck You GNU! Linux belongs to Linus and the community-not your bloated legacy.
+**B.I.N.G** is a unified collection of minimalistic, high-performance command-line utilities, compiler collection infrastructure and low-development toolchain written in pure C, FASM and part of C With Classes(C++ Without STL). Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Fuck You GNU!
 
 Licensed under permissive terms (such as the BSD 3-Clause License or Public Domain where appropriate), BING gives developers and system administrators full freedom to modify, redistribute, and integrate these tools into any pipeline without friction.
 
