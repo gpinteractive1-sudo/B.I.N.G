@@ -57,6 +57,7 @@ cd BING
 Perform the following tricks in the current folder:
 ```bash
 mkdir build
+cd build
 cmake ..
 sudo make install
 ```
