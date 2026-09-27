@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -36,8 +36,6 @@
 #include <string.h>
 #include <stdbool.h>    
 
-#define _POSIX_C_SOURCE 200809L
-#include <stdio.h>
 
 int main(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
