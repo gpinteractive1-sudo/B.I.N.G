@@ -91,7 +91,8 @@ int main(int argc, char *argv[]) {
 
     char token[MAX_TOKEN_LEN];
     int in_definition = 0;
-
+    long word_buffer_addr = 60000;
+    
     while(fscanf(in, "%255s", token) != EOF) {
         if(strcmp(token, "\\") == 0) {
             int ch;
@@ -211,6 +212,21 @@ int main(int argc, char *argv[]) {
         else if(strcasecmp(token, "KEY") == 0) {
              fprintf(out, "    if (top < %d) { stack[++top] = getchar(); }\n", STACK_SIZE - 1);
         }
+        else if(strcasecmp(token, "WORD") == 0) {
+		     fprintf(out, "    if (top >= 0) {\n");
+		     fprintf(out, "    long delim = stack[top];\n");
+		     fprintf(out, "    long addr = %ld;\n", word_buffer_addr);
+		     fprintf(out, "    int ch, idx = 1;\n");
+		     fprintf(out, "    while ((ch = getchar()) != EOF && ch == delim);\n");
+		     fprintf(out, "    while (ch != EOF && ch != delim && ch != '\\n' && ch != '\\r' && idx < 255) {\n");
+		     fprintf(out, "        memory[addr + idx] = ch;\n");
+		     fprintf(out, "        idx++;\n");
+		     fprintf(out, "        ch = getchar();\n");
+		     fprintf(out, "    }\n");
+		     fprintf(out, "    memory[addr] = idx - 1;\n");
+		     fprintf(out, "    stack[top] = addr;\n");
+		     fprintf(out, "   }\n");
+		}
         else if(strcasecmp(token, "EMIT") == 0) {
              fprintf(out, "    if (top >= 0) { putchar((char)stack[top--]); fflush(stdout); }\n");
         }
