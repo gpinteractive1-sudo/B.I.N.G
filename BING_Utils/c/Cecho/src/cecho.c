@@ -29,22 +29,28 @@
  */
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
 #include <string.h>
 #include <stdbool.h>    
 
 
 int main(int argc, char *argv[]) {
-    for (int i = 1; i < argc; i++) {
+    bool skip_newline = false;
+    int start_index = 1;
+   
+    if(argc > 1 && strcmp(argv[1], "-n") == 0) {
+        skip_newline = true;
+        start_index = 2;
+    }
+    for (int i = start_index; i < argc; i++) {
         fputs(argv[i], stdout);
         if (i < argc - 1) {
             putchar(' ');
         }
     }
+    if(!skip_newline){
     putchar('\n');
+    
+    }
     return 0;
 }
 
