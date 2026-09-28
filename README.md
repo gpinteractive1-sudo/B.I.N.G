@@ -60,7 +60,7 @@ mkdir build && cd build
 cmake ..
 sudo make install
 ```
-### --- For BSD: ---
+### For BSD:
 ```bash
 mkdir build && cd build
 cmake ..
