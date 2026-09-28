@@ -56,8 +56,16 @@ cd BING
 ### Step 2: Installing the Toolchain
 Perform the following tricks in the current folder:
 ```bash
-mkdir build
-cd build
+mkdir build && cd build
 cmake ..
 sudo make install
 ```
+### --- For BSD: ---
+```bash
+mkdir build && cd build
+cmake ..
+make
+su -m root -c "make install"
+```
+
+
