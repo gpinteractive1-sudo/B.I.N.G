@@ -58,14 +58,16 @@ Perform the following tricks in the current folder:
 ```bash
 mkdir build && cd build
 cmake ..
-sudo make install
+cmake --build
+sudo cmake --install
 ```
 ### For BSD:
 ```bash
 mkdir build && cd build
 cmake ..
-make
-su -m root -c "make install"
+cmake --build
+cmake --install
+su -m root -c "cmake --install "
 ```
 
 
