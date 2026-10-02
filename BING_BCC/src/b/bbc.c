@@ -1339,13 +1339,12 @@ int main (int argc, char* argv[]){
 	fclose(file_in);
 	fclose(fasm_out);
 	
-	printf("Front-end complete! Compiled to: %s\n", asm_filename);
 	
 	char fasm_command[512];
 	
 	sprintf(fasm_command, "fasm %s %s", asm_filename, out_filename);
 	
-	printf("Invoking Backend Linker: %s\n", fasm_command);
+	
 	
 	int status = system(fasm_command);
 	
@@ -1361,7 +1360,6 @@ int main (int argc, char* argv[]){
 		int total_jokes = sizeof(jokes) / sizeof(jokes[0]);
 		
 		int random_index = rand() % total_jokes;
-	    printf("Compilation success! Standing binary created: %s\n", out_filename);
 	    printf("Joke of the day: %s\n\n", jokes[random_index]);
 	} else {
 	   printf("[Epic Shitshow] Backend compilation via FASM failed. Go fix your code!\n\n");
