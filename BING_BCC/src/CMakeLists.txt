@@ -1,4 +1,4 @@
-add_executable(bbc src/b/bbc.c)
+add_executable(bbc b/bbc.c)
 
 
 install(TARGETS bbc
@@ -9,6 +9,6 @@ install(TARGETS bbc
 
 )
 
-install(DIRECTORY src/b/include/macro
-    DESTINATION   bin/include
+install(DIRECTORY include
+    DESTINATION   bin
   )
