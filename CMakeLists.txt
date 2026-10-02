@@ -15,4 +15,4 @@ endif()
 add_subdirectory(BING_Utils/c) 
 
 
-add_subdirectory(BING_BCC)
+add_subdirectory(BING_BCC/src)
