@@ -1281,7 +1281,7 @@ int main (int argc, char* argv[]){
 		   printf("Target Frontend: %s\n", BCC_TARGET_LANG);
 		   return 0;
 	   } else if(strcmp(argv[i], "-h") == 0) {
-		   printf("[Usage: %s [options] file...\n", argv[0]);
+		   printf("[Usage]: %s [options] file...\n", argv[0]);
 		   printf("Options:\n");
 		   printf("    -V     Display compiler version\n");
 		   printf("    -h     Display helper menu\n");
