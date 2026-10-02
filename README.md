@@ -27,7 +27,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cchmod`** — a minimalist implementation of `chmod`.
 
 
-### Development & Languages 
+### B.I.N.G Compiler Collection
 
 * **`bbc`** — A Compiler of the B language which use FASM on Backend.
 
