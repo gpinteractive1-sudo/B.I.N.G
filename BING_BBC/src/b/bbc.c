@@ -33,6 +33,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include "configuration.h"
 
 #ifdef _WIN32
     #define PATH_SEP "\\" 
@@ -1147,11 +1148,32 @@ int main (int argc, char* argv[]){
 		return 1;
 	}
 	
+	
+	
 	char* input_filename = NULL;
 	srand(time(NULL));
 	
 	for(int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "-bsd") == 0) {
+	 if(strcmp(argv[i], "-V") == 0) {
+		   printf("%s (BCC) version %s\n", BCC_COLLECTION_NAME, VERSION);
+		   printf("Compiler Identity: %s\n", BCC_COMPILER_IDENTITY);
+		   printf("Target Frontend: %s\n", BCC_TARGET_LANG);
+		   return 0;
+	   } else if(strcmp(argv[i], "-h") == 0) {
+		   printf("[Usage: %s [options] file...\n", argv[0]);
+		   printf("Options:\n");
+		   printf("    -V     Display compiler version\n");
+		   printf("    -h     Display helper menu\n");
+		   printf("    -win   Target 64-bit Windows OS\n");
+		   printf("    -mac   Target 64-bit MacOS (MachO64 format)\n");
+		   printf("    -bsd   Target 64-bit FreeBSD/OpenBSD/NetBSD (ELF64format)\n");
+		   printf("    -bin   Target freestanding 16-bit Master Boot Record (MBR) binary\n");
+		   printf("For compilation for Linux, there is no need to write the flag\n");
+		   return 0;
+		   }
+	   
+	 
+	 else if (strcmp(argv[i], "-bsd") == 0) {
 			
 		    	is_bsd = 1; is_mac = 0; is_win = 0;
 		    	is_bin = 0;
