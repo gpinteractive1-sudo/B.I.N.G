@@ -80,7 +80,8 @@ typedef enum {
     TOKEN_LSHIFT,
     TOKEN_RSHIFT,
     TOKEN_AND,
-    TOKEN_ASM
+    TOKEN_ASM,
+    TOKEN_COMMA
     
 } TokenType;
 
@@ -274,7 +275,29 @@ Token get_next_token() {
 	   	case '-': token.type = TOKEN_MINUS;  return token;
 	   	case '+': token.type = TOKEN_PLUS;   return token;
 	   	case '*': token.type = TOKEN_MUL;    return token;
-	   	case '/': token.type = TOKEN_DIV;    return token;
+	   	case '/': 
+	   	   if (next_char == '*') {
+			   next_char = read_char();
+			   
+			   while (next_char != EOF) {
+				   if (next_char == '*'){
+					   next_char = read_char();
+					   
+					   if (next_char == '/') {
+						   next_char = read_char();
+						   break;
+						   }
+					   } else {
+						   next_char = read_char();
+						   }
+				   }
+				   
+				   return get_next_token();
+			   } else {
+				   token.type = TOKEN_DIV;
+				   return token;
+				   }
+	   	case ',': token.type = TOKEN_COMMA;  return token;
 	   	case '"':
 	   	    token.type = TOKEN_SEMI;
 	   	    strcpy(token.text, "\"");
@@ -449,28 +472,66 @@ void parse_factor(){
 			
 	       match(TOKEN_LPAREN);
 	       
+	       int arg_count = 0;
 	       
+	       if (current_token.type != TOKEN_RPAREN) {
+			   while (1){
+				   parse_expression();
+				   
+				   if(is_bin) {
+					   fprintf(fasm_out, "      push ax\n");
+					   } else {
+					   fprintf(fasm_out, "      push rax\n");	   
+						   }
+						 arg_count++;
+						 
+						 if (current_token.type == TOKEN_COMMA) {
+							 match(TOKEN_COMMA);
+							 } else {
+								 break;
+						}  
+				   }
+				   
+				}
 	       match(TOKEN_RPAREN);
 	       
 	       if (is_bin) {
 			   fprintf(fasm_out, "   call %s\n", id_name);
+			   if(arg_count > 0) {
+				   fprintf(fasm_out, "  add sp, %d\n", arg_count * 2);
+				   }
 			   } else if (is_mac) {
 				   fprintf(fasm_out, "   call _%s\n", id_name);
-				   }
-			   else {
+				   
+				   if (arg_count > 0) {
+					   fprintf(fasm_out, "  add rsp, %d\n", arg_count * 8);
+					   }
+			   } else {
 				   fprintf(fasm_out, "   call %s\n", id_name);
+				   if (arg_count > 0) {
+					   fprintf(fasm_out, "  add rsp, %d\n", arg_count * 8);
+					   }
 				   }
 		  }
 		  else {
 			  int offset = find_symbol(id_name);
 			  if (is_bin) {
 				  int bin_offset = (offset / 8) * 2;
-				  fprintf(fasm_out, "    mov ax, word [bp %d]\n", bin_offset);
+				  if (bin_offset >= 0) {
+				  fprintf(fasm_out, "    mov ax, word [bp + %d]\n", bin_offset);
 				  } else {
-				  fprintf(fasm_out, "    mov rax, [rbp %d]\n", offset);
+				  fprintf(fasm_out, "    mov ax, word [bp %d]\n", bin_offset);
 					  }
 			  }
+			  else {
+				   if (offset >= 0) {
+					   fprintf(fasm_out, "  mov rax, [rbp + %d]\n", offset);
+					   } else {
+					   fprintf(fasm_out, "  mov rax, [rbp %d]\n", offset);	   
+						   }
+				  }
 	  }	
+  }
 		else if (current_token.type == TOKEN_MUL) {
 			match(TOKEN_MUL);
 			if(current_token.type != TOKEN_IDENTIFIER) {
@@ -725,6 +786,8 @@ void parse_statement() {
 	static int switch_label_count = 0;
 	static int local_switch = 0;
 	static int case_count = 0;
+    static char next_case_lbl[64] = {0};
+    static char code_case_lbl[64] = {0};
     static char end_switch_lbl[64] = {0};
 	if (current_token.type == TOKEN_ASM) {
 		parse_inline_asm();
@@ -1015,18 +1078,43 @@ void parse_statement() {
 		  
 		  else if (current_token.type == TOKEN_LPAREN) {
 			  match(TOKEN_LPAREN);
+			  int arg_count = 0;
+			  
+			  if(current_token.type != TOKEN_RPAREN) {
+				  while(1) {
+					  parse_expression();
+					  if (is_bin) {
+						  fprintf(fasm_out, "   push ax\n");
+						  }
+					  else {
+						  fprintf(fasm_out, "   push rax\n");
+						  }
+					
+					  arg_count++;
+					  
+					  if(current_token.type == TOKEN_COMMA) {
+						  match(TOKEN_COMMA);
+						  } else {
+							  break;
+							  }
+					  }
+					  
+				  }
 			  match(TOKEN_RPAREN);
 			  match(TOKEN_SEMI);
 			  
 			  if (is_bin) {
 				  fprintf(fasm_out, "   call %s\n", var_name);
+				  if (arg_count > 0) fprintf(fasm_out, "     add sp, %d\n", arg_count * 2);
 				  }
 		else  if (is_mac) {
 			      fprintf(fasm_out, "   call _%s\n",var_name);
+			      if (arg_count > 0) fprintf(fasm_out, "     add rsp, %d\n", arg_count * 8);
 			
 			}
 		      else {
 				  fprintf(fasm_out, "   call %s\n", var_name);
+				  if (arg_count > 0) fprintf(fasm_out, "     add rsp, %d\n", arg_count * 8);
 				  }
 				  
 				 return;
@@ -1046,10 +1134,18 @@ void parse_statement() {
 		  
 		  if(is_bin) {
 			 int bin_offset = (offset / 8) * 2;
-			 fprintf(fasm_out, "   mov word [bp %d], ax\n", bin_offset);
+			 if(bin_offset >= 0) {
+			     fprintf(fasm_out, "   mov word [bp + %d], ax\n", bin_offset);
+		     } else {
+				 fprintf(fasm_out, "   mov word [bp %d], ax\n",   bin_offset);
+				 }
 			   
 			} else {
-			    fprintf(fasm_out, " mov [rbp %d], rax\n", offset);	
+				if (offset >= 0) {
+			    fprintf(fasm_out, " mov [rbp + %d], rax\n", offset);	
+			    } else {
+					fprintf(fasm_out, " mov [rbp %d], rax\n", offset);
+					}
 			}	
 		} 
 	}
@@ -1065,6 +1161,23 @@ void parse_function() {
     strcpy(func_name, current_token.text);
     match(TOKEN_IDENTIFIER);
     match(TOKEN_LPAREN);
+    
+    char args[32][64];
+    int arg_count = 0;
+    
+    if (current_token.type != TOKEN_RPAREN) {
+		while (1) {
+			if (current_token.type == TOKEN_IDENTIFIER) {
+				strcpy(args[arg_count++], current_token.text);
+				match(TOKEN_IDENTIFIER);
+				}
+			if (current_token.type == TOKEN_COMMA) {
+				match(TOKEN_COMMA);
+				} else {
+					break;
+				}
+			}
+		}
     match(TOKEN_RPAREN);
    
    if (current_token.type == TOKEN_SEMI) {
@@ -1112,6 +1225,17 @@ void parse_function() {
     symbol_count = 0;
     current_stack_offset = 0;
     
+    for (int i = 0; i < arg_count; i++) {
+		strcpy(symbol_table[symbol_count].name, args[i]);
+		if (is_bin) {
+			symbol_table[symbol_count].offset = (4 + (i * 2)) * 4;
+			
+			} else {
+				symbol_table[symbol_count].offset = 16 + (i * 8);
+				}
+			    symbol_count++;
+		}
+    
     while(current_token.type != TOKEN_RBRACE && current_token.type != TOKEN_EOF) {
 	    parse_statement();
 		}
@@ -1157,7 +1281,7 @@ int main (int argc, char* argv[]){
 		   printf("Target Frontend: %s\n", BCC_TARGET_LANG);
 		   return 0;
 	   } else if(strcmp(argv[i], "-h") == 0) {
-		   printf("[Usage]: %s [options] file...\n", argv[0]);
+		   printf("[Usage: %s [options] file...\n", argv[0]);
 		   printf("Options:\n");
 		   printf("    -V     Display compiler version\n");
 		   printf("    -h     Display helper menu\n");
@@ -1344,7 +1468,7 @@ int main (int argc, char* argv[]){
 	
 	sprintf(fasm_command, "fasm %s %s", asm_filename, out_filename);
 	
-	
+
 	
 	int status = system(fasm_command);
 	
