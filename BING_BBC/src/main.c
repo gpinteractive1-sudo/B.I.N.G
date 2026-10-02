@@ -143,7 +143,7 @@ void pop_break_label() {
 		break_labels_top--;
 		}
 	}	
-#define INCLUDE_MAX_DEPTH 8
+#define INCLUDE_MAX_DEPTH 100
 FILE* file_stack[INCLUDE_MAX_DEPTH];
 int file_stack_top = -1;
 
@@ -1274,6 +1274,11 @@ int main (int argc, char* argv[]){
 				if (ext == NULL || strcmp(ext, ".b") != 0) {
 					    printf("[Compile Error] include only supports .b files! Attemp: %s\n", include_filename);
 					    exit(1);
+					}
+				
+				if (file_stack_top >= INCLUDE_MAX_DEPTH -1) {
+					printf("[Compile Error] Include nesting depth exceeded standard limit of %d\n", INCLUDE_MAX_DEPTH);
+					exit(1);
 					}
 				file_stack_top++;
 				file_stack[file_stack_top] = file_in;
