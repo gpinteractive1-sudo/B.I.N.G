@@ -29,7 +29,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 
 ### Development & Languages 
 
-* **`bforth`** — A high-performance source-to-source compiler (transpiler) that translates Forth code into optimized, native C code.
+* **`bbc`** — A Compiler of the B language which use FASM on Backend.
 
 
 ---
