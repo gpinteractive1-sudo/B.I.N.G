@@ -9,6 +9,6 @@ install(TARGETS bbc
 
 )
 
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+install(DIRECTORY b/include
     DESTINATION   bin
   )
