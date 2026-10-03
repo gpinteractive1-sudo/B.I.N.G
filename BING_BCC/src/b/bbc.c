@@ -175,10 +175,19 @@ int is_mac = 0;
 int is_bin = 0;
 int is_linux = 0;
 #else 
+
+#elif defined(__linux__)
+int is_bsd = 0;
+int is_win = 0;
+int is_mac = 0;
+int is_bin = 0;
+int is_linux = 1;
+
 int is_bsd = 0; 
 int is_win = 0; 
 int is_mac = 0;
 int is_bin = 0; 
+int is_linux = 0;
 #endif
 
 int read_char() {
