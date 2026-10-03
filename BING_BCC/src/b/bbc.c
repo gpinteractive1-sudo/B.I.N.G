@@ -932,6 +932,7 @@ void parse_statement() {
 			     fprintf(fasm_out, "   mov rdi, 1\n");
 			     fprintf(fasm_out, "   mov rsi, rsp\n");
 			     fprintf(fasm_out, "   mov rdx, 1\n");
+		         fprintf(fasm_out, "   mov rax, 4\n");
 			     fprintf(fasm_out, "   syscall\n");
 			     fprintf(fasm_out, "   mov rax, 1\n");
 			     fprintf(fasm_out, "   pop rax\n");
