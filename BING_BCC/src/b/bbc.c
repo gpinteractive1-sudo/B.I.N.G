@@ -797,8 +797,6 @@ void parse_statement() {
 	static int switch_label_count = 0;
 	static int local_switch = 0;
 	static int case_count = 0;
-    static char next_case_lbl[64] = {0};
-    static char code_case_lbl[64] = {0};
     static char end_switch_lbl[64] = {0};
 	if (current_token.type == TOKEN_ASM) {
 		parse_inline_asm();
