@@ -159,19 +159,21 @@ int is_bsd = 0;
 int is_win = 0; 
 int is_mac = 1; 
 int is_bin = 0;
+int is_linux = 0;
 
 #elif defined(__WIN32__) || defined(__WIN64__)
 int is_bsd = 0; 
 int is_win = 1; 
 int is_mac = 0; 
 int is_bin = 0;
+int is_linux = 0;
 
 #elif defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
 int is_bsd = 1;
 int is_win = 0; 
 int is_mac = 0; 
 int is_bin = 0;
-
+int is_linux = 0;
 #else 
 int is_bsd = 0; 
 int is_win = 0; 
@@ -1265,7 +1267,7 @@ void parse_function() {
 
 int main (int argc, char* argv[]){
 	if(argc < 2) {
-		printf("Usage: %s <input_file.b> [-bsd] [-mac], [-win], [-bin]\n", argv[0]);
+		printf("Usage: %s <input_file.b> [-bsd] [-mac], [-win], [-bin], [-linux]\n", argv[0]);
 		return 1;
 	}
 	
@@ -1287,9 +1289,9 @@ int main (int argc, char* argv[]){
 		   printf("    -h     Display helper menu\n");
 		   printf("    -win   Target 64-bit Windows OS\n");
 		   printf("    -mac   Target 64-bit MacOS (MachO64 format)\n");
-		   printf("    -bsd   Target 64-bit FreeBSD/OpenBSD/NetBSD (ELF64format)\n");
+		   printf("    -bsd   Target 64-bit FreeBSD/OpenBSD/NetBSD (ELF64 format)\n");
 		   printf("    -bin   Target freestanding 16-bit Master Boot Record (MBR) binary\n");
-		   printf("For compilation for Linux, there is no need to write the flag\n");
+		   printf("    -linux Target 64-bit Linux (ELF64 format)\n");
 		   return 0;
 		   }
 	   
@@ -1297,14 +1299,16 @@ int main (int argc, char* argv[]){
 	 else if (strcmp(argv[i], "-bsd") == 0) {
 			
 		    	is_bsd = 1; is_mac = 0; is_win = 0;
-		    	is_bin = 0;
+		    	is_bin = 0; is_linux = 0;
 			
 			} else if (strcmp(argv[i], "-win") == 0)  {
-			     is_win = 1; is_mac = 0; is_bsd = 0;  is_bin = 0;
+			     is_win = 1; is_mac = 0; is_bsd = 0;  is_bin = 0; is_linux = 0;
 			} else if (strcmp(argv[i], "-mac") == 0)   {
-			     is_mac = 1; is_bsd = 0; is_win = 0; is_bin = 0;
+			     is_mac = 1; is_bsd = 0; is_win = 0; is_bin = 0; is_linux = 0;
 			} else if(strcmp(argv[i], "-bin") == 0) {
-				 is_bin = 1; is_mac = 0; is_win = 0; is_bsd = 0;
+				 is_bin = 1; is_mac = 0; is_win = 0; is_bsd = 0; is_linux = 0;
+			} else if(strcmp(argv[i], "-linux") == 0) {
+				 is_linux = 1; is_mac = 0; is_win = 0; is_bsd = 0; is_bin = 0;
 			} else {
 			    input_filename = argv[i];	
 			}
