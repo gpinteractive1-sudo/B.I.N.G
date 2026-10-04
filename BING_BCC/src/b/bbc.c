@@ -1274,6 +1274,11 @@ void parse_function() {
 // --- COMPILER_MAIN --- 
 
 int main (int argc, char* argv[]){
+	char compiler_dir[512] = {0};
+	strcpy(compiler_dir, argv[0]);
+	char* last_sep = strrchr(compiler_dir, PATH_SEP[0]);
+	if (last_sep != NULL) *last_sep = '\0';
+	
 	if(argc < 2) {
 		printf("Usage: %s <input_file.b> [-bsd] [-mac], [-win], [-bin], [-linux]\n", argv[0]);
 		return 1;
@@ -1476,7 +1481,7 @@ int main (int argc, char* argv[]){
 			}
        else	if (is_win) {
 	    fprintf(fasm_out, "\nsection '.idata' import data readable writeable\n");
-	    fprintf(fasm_out, " include '/macro/import64.inc'\n\n");
+	    fprintf(fasm_out, " include '%s%sinclude%smacro%import64.inc'\n\n", compiler_dir. PATH_SEP, PATH_SEP, PATH_SEP);
 	    fprintf(fasm_out, " library kernel32, 'KERNEL32.DLL', msvcrt, 'MSVCRT.DLL'\n\n");
 	    fprintf(fasm_out, " import kernel32, ExitProcess, 'ExitProcess'\n\n");
 	    fprintf(fasm_out, " import msvcrt, putchar,'putchar'\n");
@@ -1489,11 +1494,9 @@ int main (int argc, char* argv[]){
 	
 	
 	char fasm_command[1024];
-	if (is_win) {
-	    sprintf(fasm_command, "fasm -i \"include/\" \"%s\" \"%s\"", asm_filename, out_filename);
-	} else {
-		sprintf(fasm_command, "fasm -i \"include/\" \"%s\" \"%s\"", asm_filename, out_filename);
-	}
+
+	    sprintf(fasm_command, "fasm \"%s\" \"%s\"", asm_filename, out_filename);
+	
 	
 
 	
