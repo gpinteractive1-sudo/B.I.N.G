@@ -1450,7 +1450,7 @@ int main (int argc, char* argv[]){
 				}
 					}
 					
-					next_char =read_char();
+					next_char = read_char();
 					current_token = get_next_token();
 				}else {
 				printf("[Compile Error] Undefined token %d in global region\n", current_token.type);
@@ -1464,7 +1464,7 @@ int main (int argc, char* argv[]){
 			}
        else	if (is_win) {
 	    fprintf(fasm_out, "\nsection '.idata' import data readable writeable\n");
-	    fprintf(fasm_out, " include 'include/macro/import64.inc'\n\n");
+	    fprintf(fasm_out, " include '%%INCLUDE%%/macro/import64.inc'\n\n");
 	    fprintf(fasm_out, " library kernel32, 'KERNEL32.DLL', msvcrt, 'MSVCRT.DLL'\n\n");
 	    fprintf(fasm_out, " import kernel32, ExitProcess, 'ExitProcess'\n\n");
 	    fprintf(fasm_out, " import msvcrt, putchar,'putchar'\n");
@@ -1476,9 +1476,12 @@ int main (int argc, char* argv[]){
 	fclose(fasm_out);
 	
 	
-	char fasm_command[512];
-	
-	sprintf(fasm_command, "fasm %s %s", asm_filename, out_filename);
+	char fasm_command[1024];
+	if (is_win) {
+	    sprintf(fasm_command, "set INCLUDE=include&& fasm \"%s\" \"%s\"", asm_filename, out_filename);
+	} else {
+		sprintf(fasm_command, "INCLUDE=include fasm \"%s\" \"%s\"", asm_filename, out_filename);
+	}
 	
 
 	
