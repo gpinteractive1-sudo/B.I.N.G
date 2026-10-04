@@ -1274,10 +1274,17 @@ void parse_function() {
 // --- COMPILER_MAIN --- 
 
 int main (int argc, char* argv[]){
+	char resolved_path[1024] = {0};
 	char compiler_dir[512] = {0};
+	if (realpath(argv[0], resolved_path) != NULL) {
 	strcpy(compiler_dir, argv[0]);
-	char* last_sep = strrchr(compiler_dir, PATH_SEP[0]);
+	char* last_sep = strrchr(compiler_dir, '/');
 	if (last_sep != NULL) *last_sep = '\0';
+	} else {
+
+        strcpy(compiler_dir, ".");
+		
+	}
 	
 	if(argc < 2) {
 		printf("Usage: %s <input_file.b> [-bsd] [-mac], [-win], [-bin], [-linux]\n", argv[0]);
