@@ -1476,7 +1476,7 @@ int main (int argc, char* argv[]){
 			}
        else	if (is_win) {
 	    fprintf(fasm_out, "\nsection '.idata' import data readable writeable\n");
-	    fprintf(fasm_out, " include '%%INCLUDE%%/macro/import64.inc'\n\n");
+	    fprintf(fasm_out, " include '/macro/import64.inc'\n\n");
 	    fprintf(fasm_out, " library kernel32, 'KERNEL32.DLL', msvcrt, 'MSVCRT.DLL'\n\n");
 	    fprintf(fasm_out, " import kernel32, ExitProcess, 'ExitProcess'\n\n");
 	    fprintf(fasm_out, " import msvcrt, putchar,'putchar'\n");
