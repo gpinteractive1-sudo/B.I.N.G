@@ -1490,9 +1490,9 @@ int main (int argc, char* argv[]){
 	
 	char fasm_command[1024];
 	if (is_win) {
-	    sprintf(fasm_command, "set INCLUDE=include&& fasm \"%s\" \"%s\"", asm_filename, out_filename);
+	    sprintf(fasm_command, "fasm -i \"include/\" \"%s\" \"%s\"", asm_filename, out_filename);
 	} else {
-		sprintf(fasm_command, "INCLUDE=include fasm \"%s\" \"%s\"", asm_filename, out_filename);
+		sprintf(fasm_command, "fasm -i \"include/\" \"%s\" \"%s\"", asm_filename, out_filename);
 	}
 	
 
