@@ -1365,19 +1365,31 @@ int main (int argc, char* argv[]){
 	   return 1;	
 	}
 	if(is_win) {
-	   // Format for 64-bit Windows (Console) 
+	   // Format for 64-bit Windows (Console)
+	   fprintf(fasm_out, "WINDOWS = 1\n");
 	   fprintf(fasm_out, "format PE64 console\n");
 	} else if(is_mac) {
 	   // Format for MAC
+	   fprintf(fasm_out, "MACH = 1\n");
 	   fprintf(fasm_out, "format MachO64 executable\n");
 	   fprintf(fasm_out, "interpreter '/usr/lib/dyld'\n");
 	   fprintf(fasm_out, "uses '/usr/lib/libSystem.B.dylib'\n\n");
 	} else if(is_bin) {
+		// Format for 16-bit MBR
+		fprintf(fasm_out, "MBR = 1\n");
 		fprintf(fasm_out, "format binary\n");
 		fprintf(fasm_out, "use16\n");
 		fprintf(fasm_out, "org 0x7C00\n\n");
 	} else {
 	   // Format for LINUX/BSD
+		if (is_bsd) {
+            fprintf(fasm_out, "BSD = 1\n");
+		}
+		else {
+
+            fprintf(fasm_out, "LINUX = 1\n");
+			
+		}
 	   fprintf(fasm_out, "format ELF64 executable at 0x400000\n");
 	   fprintf(fasm_out, "segment readable executable\n\n");
 	   
