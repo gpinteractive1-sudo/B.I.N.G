@@ -789,6 +789,7 @@ void parse_inline_asm() {
 		fputc(next_char, fasm_out);
 		next_char = read_char();
 		}
+	    memset(&current_token, 0, sizeof(Token)); 
 		current_token = get_next_token();
 	}
  
