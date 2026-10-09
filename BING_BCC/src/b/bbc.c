@@ -1287,9 +1287,10 @@ int main (int argc, char* argv[]){
 	
 	for(int i = 1; i < argc; i++) {
 	 if(strcmp(argv[i], "-V") == 0) {
-		   printf("%s (BCC) version %s\n", BCC_COLLECTION_NAME, VERSION);
-		   printf("Compiler Identity: %s\n", BCC_COMPILER_IDENTITY);
-		   printf("Target Frontend: %s\n", BCC_TARGET_LANG);
+		   printf("%s (BCC) version %s\n", BBC_COLLECTION_NAME, BBC_VERSION);
+		   printf("Compiler Identity: %s\n", BBC_COMPILER_IDENTITY);
+		   printf("Source Language: %s\n", BBC_SOURCE_LANG);
+		   printf("Target Backend: %s\n",  BBC_TARGET_BACKEND);
 		   return 0;
 	   } else if(strcmp(argv[i], "-h") == 0) {
 		   printf("[Usage]: %s [options] file...\n", argv[0]);
