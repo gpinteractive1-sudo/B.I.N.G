@@ -1,10 +1,11 @@
-#ifndef BCC_CONFIGURATION_H
-#define BCC_CONFIGURATION_H
+#ifndef BBC_CONFIGURATION_H
+#define BBC_CONFIGURATION_H
 
-#define BCC_COLLECTION_NAME   "B.I.N.G Compiler Collection"
-#define VERSION               "1.0.0"
-#define BCC_COMPILER_IDENTITY "bb"
-#define BCC_TARGET_LANG       "B Language"
+#define BBC_COLLECTION_NAME   "B.I.N.G Compiler Collection"
+#define BBC_VERSION               "1.0.0"
+#define BBC_COMPILER_IDENTITY "bbc"
+#define BBC_SOURCE_LANG       "B Language"
+#define BBC_TARGET_BACKEND    "FASM (Flat Assembler)"
 
 
 #endif
