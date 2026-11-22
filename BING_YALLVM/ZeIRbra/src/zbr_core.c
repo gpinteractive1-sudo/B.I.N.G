@@ -160,19 +160,19 @@ void zbr_arg(ZbrModule *m, ZbrType type, ZbrInst val) {
 }
 
 ZbrInst zbr_cmp_ne(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-
+    return zbr_emit(m, ZBR_OP_CMP_NE, type, a, b, 0);
 }
 
 ZbrInst zbr_cmp_gt(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-
+    return zbr_emit(m, ZBR_OP_CMP_GT, type, a, b, 0);
 }
 
 ZbrInst zbr_cmp_le(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-
+    return zbr_emit(m, ZBR_OP_CMP_LE, type, a, b, 0);
 }
 
 ZbrInst zbr_cmp_ge(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-
+    return zbr_emit(m, ZBR_OP_CMP_GE, type, a, b, 0);
 }
 
 ZbrInst zbr_sar(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
