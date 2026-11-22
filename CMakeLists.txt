@@ -13,6 +13,5 @@ endif()
 
 
 add_subdirectory(BING_Utils/c) 
-
-
+add_subdirectory(BING_YALLVM)
 add_subdirectory(BING_BCC/src)
