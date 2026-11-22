@@ -6,7 +6,7 @@ A modern, lightweight alternative to GNU Compiler infrastructure, low-developmen
 
 ## 📖 Overview
 
-**B.I.N.G** is a unified collection of minimalistic, high-performance command-line utilities, compiler collection infrastructure (BCC) and low-development toolchain written in pure C, FASM and part of C With Classes(C++ Without STL). Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Fuck You GNU!
+**B.I.N.G** is a unified collection of minimalistic, high-performance command-line utilities, compiler collection infrastructure (BCC & YALLVM), and low-level toolchain written in pure C, FASM and part of C With Classes(C++ Without STL). Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Screw You GNU!
 
 Licensed under permissive terms (such as the BSD 3-Clause License or Public Domain where appropriate), BING gives developers and system administrators full freedom to modify, redistribute, and integrate these tools into any pipeline without friction.
 
@@ -22,16 +22,24 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 * **`cid`** — A minimalist realization of `id`.
 * **`ccommand`** — A clean-room, standalone POSIX alternative to the shell built-in command utility of `posix-command`.
 * **`cmkdir`** —  A realization of `mkdir`.
-* **`csleep`** — a minimalist implementation of `sleep`.
-* **`cenv`** — a minimalist implementation of `env`.
-* **`cchmod`** — a minimalist implementation of `chmod`.
+* **`csleep`** — A minimalist implementation of `sleep`.
+* **`cenv`** — A minimalist implementation of `env`.
+* **`cchmod`** — A minimalist implementation of `chmod`.
 
 
-### B.I.N.G Compiler Collection
+### B.I.N.G Compiler Collection 
 
 * **`bbc`** — A Compiler of the B language which use FASM on Backend.
 
 
+---
+
+### Yet Another Low-Level Virtual Machine
+
+* **`zeirbra`** —An intermediate representation to facilitate the writing of compilers and interpreters.
+* **`YALLM`** — An ahead-of-time (AOT) code generator lowering ZeIRbra IR to FASM assembly *(in development)*.
+* **`YALVM`** — A minimalist bytecode virtual machine for executing ZeIRbra IR in memory *(in development)*.
+  
 ---
 
 ## ✨ Core Features
