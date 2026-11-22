@@ -58,8 +58,8 @@ Clone the B.I.N.G repository and install the toolchain with utilities on your Li
 ### Step 1: Clone the Repository
 Open your terminal and clone the project from GitHub:
 ```bash
-git clone https://github.com/gpinteractive1-sudo/BING.git
-cd BING
+git clone https://github.com/gpinteractive1-sudo/B.I.N.G.git
+cd B.I.N.G
 ```
 ### Step 2: Installing the Toolchain
 Perform the following tricks in the current folder:
