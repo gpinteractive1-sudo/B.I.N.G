@@ -100,7 +100,7 @@ static inline ZbrInst zbr_emit(ZbrModule *m, uint8_t op_code, uint8_t t, uint32_
     m->op[i] = op_code;
     m->type[i] = t;
     m->arg1[i] = arg1;
-    m->arg1[i] = arg2;
+    m->arg2[i] = arg2;
     m->imm[i] = val;
 
     m->count++;
