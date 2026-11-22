@@ -169,11 +169,11 @@ ZbrLabel zbr_label_new(ZbrModule *m, const char *name) {
     return id;
 }
 
-ZbrInst zbr_op_cmp_eq(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
+ZbrInst zbr_cmp_eq(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
       return zbr_emit(m, ZBR_OP_CMP_EQ, type, a, b, 0);
 }
 
-ZbrInst zbr_op_cmp_lt(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
+ZbrInst zbr_cmp_lt(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
    return zbr_emit(m, ZBR_OP_CMP_LT, type, a, b, 0);
 }
 
