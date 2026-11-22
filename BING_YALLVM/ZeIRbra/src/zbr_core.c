@@ -118,7 +118,7 @@ ZbrInst zbr_shl(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
 }
 
 ZbrInst zbr_shr(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-    return zbr_emit(m, ZBR_OP_SHL, type, a, b, 0);
+    return zbr_emit(m, ZBR_OP_SHR, type, a, b, 0);
 }
 
 void zbr_ret(ZbrModule *m, ZbrInst val) {
@@ -140,11 +140,11 @@ ZbrLabel zbr_label_new(ZbrModule *m, const char *name) {
 }
 
 ZbrLabel zbr_op_cmp_eq(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-    return zbr_emit(m, ZBR_OP_CMP_EQ, type, a, b, 0);
+      return zbr_emit(m, ZBR_OP_CMP_EQ, type, a, b, 0);
 }
 
 ZbrLabel zbr_op_cmp_lt(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
-    return zbr_emit(m, ZBR_OP_CMP_LT, type, a, b, 0);
+   return zbr_emit(m, ZBR_OP_CMP_LT, type, a, b, 0);
 }
 
 void zbr_jmp(ZbrModule *m, ZbrLabel target) {
