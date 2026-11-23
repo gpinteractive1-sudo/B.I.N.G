@@ -4,7 +4,7 @@ A modern, lightweight alternative to GNU Compiler infrastructure, low-developmen
 
 ---
 
-## 📖 Overview
+## Overview
 
 **B.I.N.G** is a unified collection of minimalistic, high-performance command-line utilities, compiler collection infrastructure (BCC & YALLVM), and low-level toolchain written in pure C, FASM and part of C With Classes(C++ Without STL). Designed for POSIX-compliant systems, it completely avoids the bloat, legacy baggage, and restrictive GPL licensing of traditional GNU implementations. So, Screw You GNU!
 
@@ -12,7 +12,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 
 ---
 
-## 🧰 Included Utilities
+## Included Utilities
 
 * **`cing`** — A clean-room alternative to `cat` for high-performance stream copying and file reading.
 * **`ctrue`** — A minimalist implementation of `true`.
@@ -42,7 +42,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
   
 ---
 
-## ✨ Core Features
+## Core Features
 
 * **Zero Bloat:** Stripped of unnecessary legacy layers, focusing purely on raw performance and simplicity.
 * **Permissive Licensing:** Fully open-source under BSD 3-Clause and Public Domain terms.
@@ -51,7 +51,7 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 
 ---
 
-## 🛠️ Installation & Tutorial
+## Installation & Tutorial
 
 Clone the B.I.N.G repository and install the toolchain with utilities on your Linux system.
 
