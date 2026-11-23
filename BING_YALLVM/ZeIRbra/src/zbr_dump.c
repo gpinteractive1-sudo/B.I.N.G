@@ -173,6 +173,56 @@ void zbr_dump(const ZbrModule *m) {
             printf("    SAR %%%u, %%%u, %%%u\n", m->arg1[i], m->arg2[i], i);
             break;
 
+            case ZBR_OP_ZEXT:
+            printf("    ZEXT %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_SEXT:
+            printf("    SEXT %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_TRUNC:
+            printf("    TRUNC %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_FPEXT:
+            printf("    FPEXT %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_FPTRUNC:
+            printf("    FPTRUNC %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_SITOFP:
+            printf("    SITOFP %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_UITOFP:
+            printf("    UITOFP %%%u, %%%u\n", m->arg1[i], i);
+            break;
+            
+            case ZBR_OP_FPTOSI:
+            printf("    FPTOSI %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_FPTOUI:
+            printf("    FPTOUI %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_PTRTOINT:
+            printf("    PTRTOINT %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_INTTOPTR:
+            printf("    INTTOPTR %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            case ZBR_OP_BITCAST:
+            printf("    BITCAST %%%u, %%%u\n", m->arg1[i], i);
+            break;
+
+            
+
             }
 
         }
