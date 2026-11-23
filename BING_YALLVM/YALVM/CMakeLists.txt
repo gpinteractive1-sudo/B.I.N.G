@@ -11,5 +11,5 @@ target_include_directories(YALVM PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../ZeIRbra/src
 )
 
-target_link_libraries(YALVM PUBLIC ZeIRbra)
+target_link_libraries(YALVM PUBLIC zeirbra)
 
