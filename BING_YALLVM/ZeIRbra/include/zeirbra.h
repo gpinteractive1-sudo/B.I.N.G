@@ -60,6 +60,26 @@ void       zbr_clear(ZbrModule *m);
 ZbrInst zbr_const_i(ZbrModule *m, ZbrType type, uint64_t val);
 ZbrInst zbr_const_f(ZbrModule *m, ZbrType type, double val);
 
+ZbrInst zbr_zext(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_sext(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_trunc(ZbrModule *m, ZbrType to_type, ZbrInst val);
+
+// Float to Float
+ZbrInst zbr_fpext(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_fptrunc(ZbrModule *m, ZbrType to_type, ZbrInst val);
+
+// Int to Float
+ZbrInst zbr_sitofp(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_uitofp(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_fptosi(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_fptoui(ZbrModule *m, ZbrType to_type, ZbrInst val);
+
+// Pointers & Bits
+ZbrInst zbr_ptrtoint(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_inttoptr(ZbrModule *m, ZbrType to_type, ZbrInst val);
+ZbrInst zbr_bitcast(ZbrModule *m, ZbrType to_type, ZbrInst val);
+
+
 ZbrInst zbr_add(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b);
 void    zbr_ret(ZbrModule *m, ZbrInst val);
 void    zbr_dump(const ZbrModule *m);
