@@ -209,6 +209,56 @@ ZbrInst zbr_sar(ZbrModule *m, ZbrType type, ZbrInst a, ZbrInst b) {
     return zbr_emit(m, ZBR_OP_SAR, type, a, b, 0);
 }
 
+ZbrInst zbr_zext(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_ZEXT, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_sext(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_SEXT, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_trunc(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_TRUNC, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_fpext(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_FPEXT, to_type, val, 0, 0);
+}
+ZbrInst zbr_fptrunc(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_FPTRUNC, to_type, val, 0, 0);
+}
+
+
+ZbrInst zbr_sitofp(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_SITOFP, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_uitofp(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_UITOFP, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_fptosi(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_FPTOSI, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_fptoui(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_FPTOUI, to_type, val, 0, 0);
+}
+
+
+ZbrInst zbr_ptrtoint(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_PTRTOINT, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_inttoptr(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_INTTOPTR, to_type, val, 0, 0);
+}
+
+ZbrInst zbr_bitcast(ZbrModule *m, ZbrType to_type, ZbrInst val) {
+    return zbr_emit(m, ZBR_OP_BITCAST, to_type, val, 0, 0);
+}
+
+
 void zbr_label_bind(ZbrModule *m, ZbrLabel label) {
     if(!m || label >= m->label_count) return;
     m->label_pos[label] = m->count;
