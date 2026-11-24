@@ -4,6 +4,33 @@
 #include <stdio.h>
 #include <string.h>
 
+static inline float u32_to_f32(uint64_t r) {
+    uint32_t bits = (uint32_t)r;
+    float f;
+    memcpy(&f, &bits, sizeof(float));
+    return f;
+}
+
+static inline uint64_t f32_to_u64(float f) {
+    uint32_t bits = 0;
+    uint64_t out = 0;
+    memcpy(&bits, &f, sizeof(float));
+    memcpy(&out, &bits, sizeof(float)); 
+    return out;
+}
+
+static inline double u64_to_f64(uint64_t r) {
+    double d;
+    memcpy(&d, &r, sizeof(double));
+    return d;
+}
+
+static inline uint64_t f64_to_u64(double d) {
+    uint64_t out = 0;
+    memcpy(&out, &d, sizeof(double));
+    return out;
+}
+
 uint64_t yalvm_exec(const ZbrModule *m, ZbrLabel entry) {
     if(!m || m->count == 0) return 0;
 
@@ -38,68 +65,136 @@ while (pc < m->count) {
         break;
 
         case ZBR_OP_ADD:
-        regs[pc] = regs[m->arg1[pc]] + regs[m->arg2[pc]];
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = f64_to_u64(u64_to_f64(regs[m->arg1[pc]]) + u64_to_f64(regs[m->arg2[pc]]));
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = f32_to_u64(u32_to_f32(regs[m->arg1[pc]]) + u32_to_f32(regs[m->arg2[pc]]));
+        } else {
+            regs[pc] = regs[m->arg1[pc]] + regs[m->arg2[pc]];
+        }
         pc++;
         break;
 
         case ZBR_OP_SUB:
-        regs[pc] =  regs[m->arg1[pc]] - regs[m->arg2[pc]];
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = f64_to_u64(u64_to_f64(regs[m->arg1[pc]]) - u64_to_f64(regs[m->arg2[pc]]));
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = f32_to_u64(u32_to_f32(regs[m->arg1[pc]]) - u32_to_f32(regs[m->arg2[pc]]));
+        } else {
+            regs[pc] = regs[m->arg1[pc]] + regs[m->arg2[pc]];
+        }
         pc++;
         break;
 
         case ZBR_OP_MUL:
-        regs[pc] =  regs[m->arg1[pc]] * regs[m->arg2[pc]];
+      if (m->type[pc] == ZBR_F64) {
+         regs[pc] = f64_to_u64(u64_to_f64(regs[m->arg1[pc]])  * u64_to_f64(regs[m->arg2[pc]]));
+        } else if (m->type[pc] == ZBR_F32) {
+           regs[pc] = f32_to_u64(u32_to_f32(regs[m->arg1[pc]]) * u32_to_f32(regs[m->arg2[pc]]));
+        } else {
+            regs[pc] = regs[m->arg1[pc]] + regs[m->arg2[pc]];
+        }
         pc++;
         break;
 
         case ZBR_OP_DIV:
-        if(regs[m->arg2[pc]] == 0) {
-            printf("YALVM error: division by zero at %%%u\n", pc);
-            free(regs);
-            return 0;
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = f64_to_u64(u64_to_f64(regs[m->arg1[pc]]) / u64_to_f64(regs[m->arg2[pc]]));
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = f32_to_u64(u32_to_f32(regs[m->arg1[pc]]) / u32_to_f32(regs[m->arg2[pc]]));
+        } else {    
+            if(regs[m->arg2[pc]] == 0) {
+                printf("YALVM error: division by zero at %%%u\n", pc);
+                free(regs);
+                return 0;
         }
-
-        regs[pc] =  regs[m->arg1[pc]] / regs[m->arg2[pc]];
+        regs[pc] = regs[m->arg1[pc]] / regs[m->arg2[pc]];
+    }
         pc++;
         break;
 
         case ZBR_OP_MOD:
-         if(regs[m->arg2[pc]] == 0) {
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = f64_to_u64(fmod(u64_to_f64(regs[m->arg1[pc]]), u64_to_f64(regs[m->arg2[pc]])));
+      } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = f32_to_u64(fmodf(u32_to_f32(regs[m->arg1[pc]]), u32_to_f32(regs[m->arg2[pc]])));
+      } else {
+        if (regs[m->arg2[pc]] == 0) {
             printf("YALVM error: modulo by zero at %%%u\n", pc);
             free(regs);
-            return 0;
-        }
-        regs[pc] =  (int64_t)regs[m->arg1[pc]] % (int64_t)regs[m->arg2[pc]];
+         return 0;
+    }
+        regs[pc] = (uint64_t)((int64_t)regs[m->arg1[pc]] % (int64_t)regs[m->arg2[pc]]);
+}
         pc++;
         break;
 
         case ZBR_OP_CMP_EQ:
-        regs[pc] = (regs[m->arg1[pc]]) == (regs[m->arg2[pc]]) ? 1 : 0;
+        if(m->type[pc] == ZBR_F64) {
+            regs[pc] = (u64_to_f64(regs[m->arg1[pc]]) == u64_to_f64(regs[m->arg2[pc]])) ? 1 : 0;
+        }
+        else if(m->type[pc] == ZBR_F32) {
+            regs[pc] = (u32_to_f32(regs[m->arg1[pc]]) == u32_to_f32(regs[m->arg2[pc]])) ? 1 : 0;
+        }
+        else {
+            regs[pc] = (regs[m->arg1[pc]]) == (regs[m->arg2[pc]]) ? 1 : 0;
+        }
         pc++;
         break;
 
         case ZBR_OP_CMP_NE:
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = (u64_to_f64(regs[m->arg1[pc]]) != u64_to_f64(regs[m->arg2[pc]])) ? 1 : 0;
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = (u32_to_f32(regs[m->arg1[pc]]) != u32_to_f32(regs[m->arg2[pc]])) ? 1 : 0;
+        }
+        else {
         regs[pc] = (regs[m->arg1[pc]]) != (regs[m->arg2[pc]]) ? 1 : 0;
+        }
         pc++;
         break;
 
         case ZBR_OP_CMP_LT:
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = (u64_to_f64(regs[m->arg1[pc]]) < u64_to_f64(regs[m->arg2[pc]])) ? 1 : 0;
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = (u32_to_f32(regs[m->arg1[pc]]) < u32_to_f32(regs[m->arg2[pc]])) ? 1 : 0;
+        } else {
         regs[pc] =  ((int64_t)regs[m->arg1[pc]]  < (int64_t)regs[m->arg2[pc]]) ? 1 : 0;
+        }
         pc++;
         break;
        
         case ZBR_OP_CMP_GT:
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = (u64_to_f64(regs[m->arg1[pc]]) > u64_to_f64(regs[m->arg2[pc]])) ? 1 : 0;
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = (u32_to_f32(regs[m->arg1[pc]]) > u32_to_f32(regs[m->arg2[pc]])) ? 1 : 0;
+        } else {    
         regs[pc] =  ((int64_t)regs[m->arg1[pc]]  > (int64_t)regs[m->arg2[pc]]) ? 1 : 0;
+        }
         pc++;
         break;
 
         case ZBR_OP_CMP_LE:
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = (u64_to_f64(regs[m->arg1[pc]]) <= u64_to_f64(regs[m->arg2[pc]])) ? 1 : 0;
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = (u32_to_f32(regs[m->arg1[pc]]) <= u32_to_f32(regs[m->arg2[pc]])) ? 1 : 0;
+        } else {
         regs[pc] =  ((int64_t)regs[m->arg1[pc]]  <= (int64_t)regs[m->arg2[pc]]) ? 1 : 0;
+        }
         pc++;
         break;
 
         case ZBR_OP_CMP_GE:
-        regs[pc] =  ((int64_t)regs[m->arg1[pc]]  >= (int64_t)regs[m->arg2[pc]]) ? 1 : 0;
+        if (m->type[pc] == ZBR_F64) {
+            regs[pc] = (u64_to_f64(regs[m->arg1[pc]]) >= u64_to_f64(regs[m->arg2[pc]])) ? 1 : 0;
+        } else if (m->type[pc] == ZBR_F32) {
+            regs[pc] = (u32_to_f32(regs[m->arg1[pc]]) >= u32_to_f32(regs[m->arg2[pc]])) ? 1 : 0;
+        } else {
+            regs[pc] =  ((int64_t)regs[m->arg1[pc]]  >= (int64_t)regs[m->arg2[pc]]) ? 1 : 0;
+        }
         pc++;
         break;
 
@@ -207,9 +302,13 @@ while (pc < m->count) {
     }
 
         case ZBR_OP_FPTOSI: {
-        double d = 0;
-        memcpy(&d, &regs[m->arg1[pc]], sizeof(double));
-        regs[pc] = (uint64_t)(int64_t)d;
+        if (m->type[pc] == ZBR_F32) {
+            float f = u32_to_f32(regs[m->arg1[pc]]);
+            regs[pc] = (uint64_t)(int64_t)f;
+        } else {
+            double d = u64_to_f64(regs[m->arg1[pc]]);
+            regs[pc] = (uint64_t)(int64_t)d;
+        }
         pc++;
         break;
     }
@@ -234,21 +333,25 @@ while (pc < m->count) {
 
         case ZBR_OP_UITOFP: {
             if (m->type[pc] == ZBR_F64) {
-                double d = (double)regs[m->arg1[pc]];
-                memcpy(&regs[pc], &d, sizeof(double));
-            } else {
-                float f = (float)regs[m->arg1[pc]];
-                regs[pc] = 0;
-                memcpy(&regs[pc], &f, sizeof(float));
-            }
+            double d = (double)regs[m->arg1[pc]];
+            regs[pc] = f64_to_u64(d);
+        } else {
+            float f = (float)regs[m->arg1[pc]];
+            regs[pc] = f32_to_u64(f);
+        }
             pc++;
             break;
         }
 
         case ZBR_OP_FPTOUI: {
-            double d = 0;
-            memcpy(&d, &regs[m->arg1[pc]], sizeof(double));
-            regs[pc] = (uint64_t)d;
+            if (m->type[pc] == ZBR_F32) {
+                float f = u32_to_f32(regs[m->arg1[pc]]);
+                regs[pc] = (uint64_t)f;
+            } else {
+                double d = 0;
+                memcpy(&d, &regs[m->arg1[pc]], sizeof(double));
+                regs[pc] = (uint64_t)d;
+        }
             pc++;
             break;
         }
