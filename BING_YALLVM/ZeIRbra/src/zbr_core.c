@@ -63,6 +63,9 @@ void zbr_clear(ZbrModule *m) {
 
 void zbr_destroy(ZbrModule *m) {
     if(!m) return;
+    for (uint32_t i = 0; i < m->label_count; i++) {
+        free((void*)m->label_name[i]);
+    }
     free(m->op);
     free(m->type);
     free(m->arg1);
@@ -165,7 +168,14 @@ ZbrLabel zbr_label_new(ZbrModule *m, const char *name) {
 
     uint32_t id = m->label_count++;
     m->label_pos[id] = (uint32_t)-1;
-    m->label_name[id] = name;
+    if(name) {
+        size_t len = strlen(name) + 1;
+        char *copy = (char*)malloc(len);
+        if (copy) memcpy(copy, name, len);
+        m->label_name[id] = copy;
+    } else {
+        m->label_name[id] = NULL;
+    }
     return id;
 }
 
