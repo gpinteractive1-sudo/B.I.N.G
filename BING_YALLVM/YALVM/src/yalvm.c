@@ -82,7 +82,7 @@ while (pc < m->count) {
         } else if (m->type[pc] == ZBR_F32) {
             regs[pc] = f32_to_u64(u32_to_f32(regs[m->arg1[pc]]) - u32_to_f32(regs[m->arg2[pc]]));
         } else {
-            regs[pc] = regs[m->arg1[pc]] + regs[m->arg2[pc]];
+            regs[pc] = regs[m->arg1[pc]] - regs[m->arg2[pc]];
         }
         pc++;
         break;
@@ -93,7 +93,7 @@ while (pc < m->count) {
         } else if (m->type[pc] == ZBR_F32) {
            regs[pc] = f32_to_u64(u32_to_f32(regs[m->arg1[pc]]) * u32_to_f32(regs[m->arg2[pc]]));
         } else {
-            regs[pc] = regs[m->arg1[pc]] + regs[m->arg2[pc]];
+            regs[pc] = regs[m->arg1[pc]] * regs[m->arg2[pc]];
         }
         pc++;
         break;
