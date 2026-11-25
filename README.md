@@ -37,8 +37,8 @@ Licensed under permissive terms (such as the BSD 3-Clause License or Public Doma
 ### Yet Another Low-Level Virtual Machine
 
 * **`Zeirbra`** — An intermediate representation to facilitate the writing of compilers and interpreters.
-* **`YALLM`** — An ahead-of-time (AOT) code generator lowering ZeIRbra IR to FASM assembly.
-* **`YALVM`** — A minimalist bytecode virtual machine for executing ZeIRbra IR in memory *(in development)*.
+* **`YALLM`** — An ahead-of-time (AOT) code generator lowering ZeIRbra IR to FASM assembly *(in development)*.
+* **`YALVM`** — A minimalist bytecode virtual machine for executing ZeIRbra IR in memory.
   
 ---
 
