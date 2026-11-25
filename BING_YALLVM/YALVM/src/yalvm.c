@@ -58,7 +58,12 @@ uint64_t yalvm_exec(const ZbrModule *m, ZbrLabel entry) {
         pc = m->label_pos[entry];
     }
 
-    uint8_t memory[MEM_SIZE] = {0};
+    uint8_t *memory = (uint8_t*)calloc(MEM_SIZE, sizeof(uint8_t));
+    if (!memory) {
+    free(regs);
+    return 0;
+    }
+
     uint32_t sp = 0;
 
     uint64_t arg_buf[32] = {0};  
@@ -120,6 +125,7 @@ while (pc < m->count) {
         } else {    
             if(REG(m->arg2[pc]) == 0) {
                 printf("YALVM error: division by zero at %%%u\n", pc);
+                free(memory);
                 free(regs);
                 return 0;
         }
@@ -136,6 +142,7 @@ while (pc < m->count) {
       } else {
         if (REG(m->arg2[pc]) == 0) {
             printf("YALVM error: modulo by zero at %%%u\n", pc);
+            free(memory);
             free(regs);
          return 0;
     }
@@ -228,6 +235,7 @@ while (pc < m->count) {
         case ZBR_OP_ALLOCA:
         if (sp + (uint32_t)m->imm[pc] > 0xFFFE) {
             printf("YALVM error: stack memory overflow at %%%u\n", pc);
+            free(memory);
             free(regs);
             return 0;
         }
@@ -252,6 +260,7 @@ while (pc < m->count) {
         size_t size = (t == ZBR_PTR || t == ZBR_F64) ? 8 : (t == ZBR_F32 ? 4 : t);
         if (addr + size > 0xFFFE) {
                 printf("YALVM error: out-of-bounds store at %%%u\n", pc);
+                free(memory);
                 free(regs);
                 return 0;
             }
@@ -274,6 +283,7 @@ while (pc < m->count) {
         size_t size = (t == ZBR_PTR || t == ZBR_F64) ? 8 : (t == ZBR_F32 ? 4 : t);
         if (addr + size > 0xFFFE) {
                 printf("YALVM error: out-of-bounds load at %%%u\n", pc);
+                free(memory);
                 free(regs);
                 return 0;
             }
@@ -291,6 +301,7 @@ while (pc < m->count) {
         case ZBR_OP_CALL:        
         if (call_depth >= MAX_FRAMES - 1) {
         printf("YALVM error: call stack overflow at %%%u\n", pc);
+        free(memory);
         free(regs);
         return 0;
         }
@@ -321,6 +332,7 @@ while (pc < m->count) {
         pc = caller_pc + 1;  
         break;
         }
+        free(memory);
         free(regs);
         return result;
         }
@@ -449,13 +461,14 @@ while (pc < m->count) {
 
         default:
         printf("YALVM: unknown instruction %u\n", m->op[pc]);
+        free(memory);
         free(regs);
         return 0;
 
     }
 
  }
-
+free(memory);
 free(regs);
 return 0;
 
