@@ -314,7 +314,7 @@ while (pc < m->count) {
             }
 
         size_t size = (t == ZBR_PTR || t == ZBR_F64) ? 8 : (t == ZBR_F32 ? 4 : t);
-        if (addr + size > 0xFFFE) {
+        if (addr + size > IO_GETCHAR) {
                 printf("YALVM error: out-of-bounds load at %%%u\n", pc);
                 free(memory);
                 free(regs);
@@ -328,7 +328,7 @@ while (pc < m->count) {
 
         case ZBR_OP_ARG:
         if (arg_count >= MAX_ARGS) {
-            printf("YALVM error: too many arguments at %%u\n", pc);
+            printf("YALVM error: too many arguments at %%%u\n", pc);
             free(memory);
             free(regs);
             return 0;
