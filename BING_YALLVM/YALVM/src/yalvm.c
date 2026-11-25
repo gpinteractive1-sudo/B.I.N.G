@@ -35,10 +35,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#define REG(idx) regs[reg_base + (idx)]
 
-#define MAX_FRAMES 256
-#define MEM_SIZE   65536
+#define MAX_FRAMES 1024
+#define MAX_ARGS    128
+#define MEM_SIZE   (2 * 1024 * 1024)
+#define IO_PUTCHAR (MEM_SIZE - 1)
+#define IO_GETCHAR (MEM_SIZE - 2)
+#define REG(idx) regs[reg_base + (idx)]
 
 typedef struct {
     uint32_t caller_pc;
@@ -96,7 +99,7 @@ uint64_t yalvm_exec(const ZbrModule *m, ZbrLabel entry) {
 
     uint32_t sp = 0;
 
-    uint64_t arg_buf[32] = {0};  
+    uint64_t arg_buf[MAX_ARGS] = {0};  
     uint32_t arg_count = 0;
 
     CallFrame call_stack[MAX_FRAMES] = {0}; 
@@ -263,7 +266,7 @@ while (pc < m->count) {
         break;
 
         case ZBR_OP_ALLOCA:
-        if (sp + (uint32_t)m->imm[pc] > 0xFFFE) {
+        if (sp + (uint32_t)m->imm[pc] > IO_GETCHAR) {
             printf("YALVM error: stack memory overflow at %%%u\n", pc);
             free(memory);
             free(regs);
@@ -280,7 +283,7 @@ while (pc < m->count) {
         uint8_t  t    = m->type[pc];
 
         
-        if (addr == 0xFFFF) {
+        if (addr == IO_PUTCHAR) {
                 putchar((int)(val & 0xFF));
                 fflush(stdout);
                 pc++;
@@ -288,7 +291,7 @@ while (pc < m->count) {
         }
 
         size_t size = (t == ZBR_PTR || t == ZBR_F64) ? 8 : (t == ZBR_F32 ? 4 : t);
-        if (addr + size > 0xFFFE) {
+        if (addr + size > IO_GETCHAR) {
                 printf("YALVM error: out-of-bounds store at %%%u\n", pc);
                 free(memory);
                 free(regs);
@@ -303,7 +306,7 @@ while (pc < m->count) {
         case ZBR_OP_LOAD: {
         uint32_t addr = (uint32_t)REG(m->arg1[pc]);
         uint8_t  t    = m->type[pc];
-        if (addr == 0xFFFE) {
+        if (addr == IO_GETCHAR) {
                 int ch = getchar();
                 REG(pc) = (ch == EOF) ? (uint64_t)-1 : (uint64_t)(uint8_t)ch;
                 pc++;
@@ -324,6 +327,12 @@ while (pc < m->count) {
         }
 
         case ZBR_OP_ARG:
+        if (arg_count >= MAX_ARGS) {
+            printf("YALVM error: too many arguments at %%u\n", pc);
+            free(memory);
+            free(regs);
+            return 0;
+        }
         arg_buf[arg_count++] = REG(m->arg1[pc]);
         pc++;
         break;
