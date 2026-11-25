@@ -226,8 +226,13 @@ while (pc < m->count) {
         break;
 
         case ZBR_OP_ALLOCA:
+        if (sp + (uint32_t)m->imm[pc] > 0xFFFE) {
+            printf("YALVM error: stack memory overflow at %%%u\n", pc);
+            free(regs);
+            return 0;
+        }
         REG(pc) = sp;
-        sp += (uint32_t) m->imm[pc];
+        sp += (uint32_t)m->imm[pc];
         pc++;
         break;
 
@@ -235,7 +240,21 @@ while (pc < m->count) {
         uint32_t addr = (uint32_t)REG(m->arg1[pc]);
         uint64_t val  = REG(m->arg2[pc]);
         uint8_t  t    = m->type[pc];
+
+        
+        if (addr == 0xFFFF) {
+                putchar((int)(val & 0xFF));
+                fflush(stdout);
+                pc++;
+                break;
+        }
+
         size_t size = (t == ZBR_PTR || t == ZBR_F64) ? 8 : (t == ZBR_F32 ? 4 : t);
+        if (addr + size > 0xFFFE) {
+                printf("YALVM error: out-of-bounds store at %%%u\n", pc);
+                free(regs);
+                return 0;
+            }
         memcpy(&memory[addr], &val, size);
         pc++;
         break;
@@ -245,7 +264,19 @@ while (pc < m->count) {
         case ZBR_OP_LOAD: {
         uint32_t addr = (uint32_t)REG(m->arg1[pc]);
         uint8_t  t    = m->type[pc];
+        if (addr == 0xFFFE) {
+                int ch = getchar();
+                REG(pc) = (ch == EOF) ? (uint64_t)-1 : (uint64_t)(uint8_t)ch;
+                pc++;
+                break;
+            }
+
         size_t size = (t == ZBR_PTR || t == ZBR_F64) ? 8 : (t == ZBR_F32 ? 4 : t);
+        if (addr + size > 0xFFFE) {
+                printf("YALVM error: out-of-bounds load at %%%u\n", pc);
+                free(regs);
+                return 0;
+            }
         REG(pc) = 0; 
         memcpy(&REG(pc), &memory[addr], size);
         pc++;
