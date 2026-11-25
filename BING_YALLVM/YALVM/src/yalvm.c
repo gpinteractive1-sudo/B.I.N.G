@@ -162,7 +162,7 @@ while (pc < m->count) {
                 free(regs);
                 return 0;
         }
-        REG(pc) = REG(m->arg1[pc]) / REG(m->arg2[pc]);
+        REG(pc) = (uint64_t)((int64_t)REG(m->arg1[pc]) / (int64_t)REG(m->arg2[pc]));
     }
         pc++;
         break;
