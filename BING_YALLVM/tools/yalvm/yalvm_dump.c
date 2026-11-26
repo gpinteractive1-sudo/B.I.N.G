@@ -34,7 +34,7 @@
 
 int main (int argc, char **argv) {
     if(argc < 2) {
-        fprintf(stderr, "Usage: %s <file.ylvmbc>\n", argv[0]);
+        fprintf(stderr, "Usage: %s <file.ylvm>\n", argv[0]);
         return 1;
     }
 
